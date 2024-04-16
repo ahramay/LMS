@@ -1,0 +1,6 @@
+- backend/
+  - .gitignore
+- dashboard/
+  - .gitignore
+- frontend/
+  - .gitignore
