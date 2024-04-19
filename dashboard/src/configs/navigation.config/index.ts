@@ -246,21 +246,21 @@ const navigationConfig: NavigationTree[] = [
                 // '','Instructor', 'Organization'
                 subMenu: [
                     {
-                        key: 'groupMenu.casdollapse.InstructorItem',
-                        path: '/users',
-                        title: 'View All User',
-                        translateKey:
-                            'nav.grouasdpMenu.collapse.InstructorItem',
+                        key: 'groupMenu.collaasdpse.NUserItem',
+                        path: '/create-user',
+                        title: 'Create New User',
+                        translateKey: 'nav.groupMdasenu.collapse.NUserItem',
                         icon: '',
                         type: NAV_ITEM_TYPE_ITEM,
                         authority: [],
                         subMenu: [],
                     },
                     {
-                        key: 'groupMenu.collaasdpse.NUserItem',
-                        path: '/create-user',
-                        title: 'Create New User',
-                        translateKey: 'nav.groupMdasenu.collapse.NUserItem',
+                        key: 'groupMenu.casdollapse.InstructorItem',
+                        path: '/users',
+                        title: 'View All User',
+                        translateKey:
+                            'nav.grouasdpMenu.collapse.InstructorItem',
                         icon: '',
                         type: NAV_ITEM_TYPE_ITEM,
                         authority: [],
