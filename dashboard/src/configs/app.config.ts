@@ -11,7 +11,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 const appConfig: AppConfig = {
     baseUrl: isProduction ? window.location.origin : 'http://localhost:5151',
     apiPrefix: 'api',
-    authenticatedEntryPath: '/course-list',
+    authenticatedEntryPath: '/home',
     unAuthenticatedEntryPath: '/sign-in',
     tourPath: '/',
     locale: 'en',

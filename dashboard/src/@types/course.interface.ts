@@ -6,7 +6,12 @@ export interface Course {
     modality: string
     price: number
     image: string
+    videoUrl: string
+    postTitle: string
+    courseOverview: string
+    objectivesTitle: string
     access: string[]
+    isCreatedByMe: boolean
     createdBy: {
         _id: string
         name: string

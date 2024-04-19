@@ -1,10 +1,6 @@
 import React from 'react'
-import { CgUserList } from 'react-icons/cg'
-import UserRow from './components/UserRow'
-
 import UsersStatCard from './components/usersStatCard'
-import { array } from 'yup'
-import TableDataUsers from './components/TableDataUsers'
+import ViewUserList from './components/ViewUserList'
 
 type Props = {}
 
@@ -16,7 +12,7 @@ const UserList = (props: Props) => {
                 <UsersStatCard />
                 <UsersStatCard />
             </ul>
-            <TableDataUsers/>
+            <ViewUserList/>
         </div>
     )
 }

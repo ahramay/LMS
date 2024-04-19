@@ -1,179 +1,45 @@
-import { useState, useEffect } from 'react'
-import Input from '@/components/ui/Input'
-import Container from '@/components/shared/Container'
-import Tag from '@/components/ui/Tag'
-import { useMemo } from 'react'
-import Table from '@/components/ui/Table'
-import Pagination from '@/components/ui/Pagination'
-import Select from '@/components/ui/Select'
-import type { InputHTMLAttributes } from 'react'
+import { useState } from 'react'
 import type {
     ColumnDef,
-    FilterFn,
-    ColumnFiltersState,
 } from '@tanstack/react-table'
-import { rankItem } from '@tanstack/match-sorter-utils'
-import AdaptableCard from '@/components/shared/AdaptableCard'
-import GetUserRole from '@/components/shared/GetUserRole'
+import { useMemo } from 'react'
 import type { CellContext } from '@/components/shared/DataTable'
-import Button from '@/components/ui/Button'
-import Dialog from '@/components/ui/Dialog'
-import type { MouseEvent } from 'react'
-import { HiOutlineCog, HiOutlinePencil } from 'react-icons/hi'
-import { MdDone, MdDelete } from 'react-icons/md'
-import Dropdown from '@/components/ui/Dropdown'
+import ViewUserTable from '@/components/shared/viewusertable/ViewUserTable'
 import { BsThreeDotsVertical } from "react-icons/bs";
+import Dropdown from '@/components/ui/Dropdown'
+import Button from '@/components/ui/Button'
+import { HiOutlinePencil } from 'react-icons/hi'
+import { MdDone, MdDelete } from 'react-icons/md'
+import UserTableViewtypp from "@/@types/UserTableViewtype"
 
-import {
-    useReactTable,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getFacetedRowModel,
-    getFacetedUniqueValues,
-    getFacetedMinMaxValues,
-    getPaginationRowModel,
-    getSortedRowModel,
-    flexRender,
-} from '@tanstack/react-table'
+import Dialog from '@/components/ui/Dialog'
 
+const ViewEditors = () => {
 
-type Person = {
-    editorId: number
-    editormail: string
-    firstName: string
-    lastName: string
-    userName:string
-    signUpDate: string
-    userStatus: any
-    actions: any
-}
-
-type Option = {
-    value: number
-    label: string
-}
-
-interface DebouncedInputProps
-    extends Omit<
-        InputHTMLAttributes<HTMLInputElement>,
-        'onChange' | 'size' | 'prefix'
-    > {
-    value: string | number
-    onChange: (value: string | number) => void
-    debounce?: number
-}
-function DebouncedInput({
-    value: initialValue,
-    onChange,
-    debounce = 500,
-    ...props
-}: DebouncedInputProps) {
-    const [value, setValue] = useState(initialValue)
-
-    useEffect(() => {
-        setValue(initialValue)
-    }, [initialValue])
-
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            onChange(value)
-        }, debounce)
-
-        return () => clearTimeout(timeout)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value])
-
-    return (
-        <div className="flex justify-end">
-            <div className="flex items-center mb-4">
-                <span className="mr-2">Search:</span>
-                <Input
-                    {...props}
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                />
-            </div>
-        </div>
-    )
-}
-
-const ViewEditors: React.FC = () => {
-    const [status, setStatus] = useState<string>('all')
-    const [loading, setLoading] = useState<boolean>(false)
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-    const [globalFilter, setGlobalFilter] = useState('')
-    const [dialogIsOpen, setIsOpen] = useState(false)
+    const [dialogIsOpen, setIsOpen] = useState<boolean>(false)
 
     const openDialog = () => {
         setIsOpen(true)
+        console.log("Dialogopen")
     }
 
-    const onDialogClose = (e: MouseEvent) => {
+    const onDialogClose = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         console.log('onDialogClose', e)
         setIsOpen(false)
     }
 
-    const onDialogOk = (e: MouseEvent) => {
+    const onDialogOk = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         console.log('onDialogOk', e)
         setIsOpen(false)
     }
-
-    const { Tr, Th, Td, THead, TBody, Sorter } = Table
-
-    const pageSizeOption = [
-        { value: 10, label: '10 / page' },
-        { value: 20, label: '20 / page' },
-        { value: 30, label: '30 / page' },
-        { value: 40, label: '40 / page' },
-        { value: 50, label: '50 / page' },
-    ]
-
-    const tableData = (): Person[] => {
-        const arr = []
-        for (let i = 0; i < 100; i++) {
-            arr.push({
-                editorId: i,
-                userName:`userName${i}`,
-                editormail: `mail${i}`,
-                firstName: `First Name ${i}`,
-                lastName: `Last Name ${i}`,
-                signUpDate: `Sign Up Date ${i}`,
-                userStatus:
-                    i % 2 === 0 ? (
-                        <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
-                            Pending
-                        </Tag>
-                    ) : (
-                        <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
-                            approved
-                        </Tag>
-                    ),
-                actions: i,
-            })
-        }
-        return arr
-    }
-    const totalData = tableData().length
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-        // Rank the item
-        const itemRank = rankItem(row.getValue(columnId), value)
-        // Store the itemRank info
-        addMeta({
-            itemRank,
-        })
-        // Return if the item should be filtered in/out
-        return itemRank.passed
-    }
-
-    const handleAction = (cellProps: CellContext<Person, unknown>) => {
+    
+   
+    const handleAction = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
         console.log('Action clicked', cellProps)
 
-        
     }
 
-    const columns = useMemo<ColumnDef<Person>[]>(
+    const columns = useMemo<ColumnDef<UserTableViewtypp>[]>(
         () => [
             {
                 header: 'ID',
@@ -214,7 +80,7 @@ const ViewEditors: React.FC = () => {
                     )
                     return (
                         <>
-                            <Dropdown placement="bottom-center" renderTitle={Toggle}>
+                            <Dropdown placement="bottom-end" renderTitle={Toggle}>
                                 <Dropdown.Item eventKey="a" >
                                     <Button
                                         size="xs"
@@ -264,206 +130,83 @@ const ViewEditors: React.FC = () => {
         []
     )
 
-    const [data] = useState(() => tableData())
-    const table = useReactTable({
-        data,
-        columns,
-        filterFns: {
-            fuzzy: fuzzyFilter,
+    const tableData=[
+        {
+            'editorId': '1',
+            'userName':'userName 1',
+            'editormail': 'mail 1',
+            'firstName': 'First Name 1',
+            'lastName': 'Last Name 1',
+            'signUpDate': 'Sign Up Date 1',
+            'userStatus': true ,
+            'actions': '1',
         },
-        state: {
-            columnFilters,
-            globalFilter,
+        {
+            'editorId': '2',
+            'userName':'userName 2',
+            'editormail': 'mail 2',
+            'firstName': 'First Name 2',
+            'lastName': 'Last Name 2 ',
+            'signUpDate': 'Sign Up Date 2',
+            'userStatus': false ,
+            'actions': '1',
         },
-        enableColumnResizing: true,
-        columnResizeMode: 'onChange',
-        getCoreRowModel: getCoreRowModel(),
-        onColumnFiltersChange: setColumnFilters,
-        onGlobalFilterChange: setGlobalFilter,
-        globalFilterFn: fuzzyFilter,
-        getFilteredRowModel: getFilteredRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getFacetedRowModel: getFacetedRowModel(),
-        getFacetedUniqueValues: getFacetedUniqueValues(),
-        getFacetedMinMaxValues: getFacetedMinMaxValues(),
-        debugHeaders: true,
-        debugColumns: false,
-    })
-
-    const onPaginationChange = (page: number) => {
-        table.setPageIndex(page - 1)
-    }
-
-    const onSelectChange = (value = 0) => {
-        table.setPageSize(Number(value))
-    }
-
-    return (
-        <Container>
-            <AdaptableCard>
-                <>
-                    <Dialog
-                        isOpen={dialogIsOpen}
-                        bodyOpenClassName="overflow-hidden"
-                        onClose={onDialogClose}
-                        onRequestClose={onDialogClose}
-                    >
-                        <h5 className="mb-4">
-                            Would you like to permanently delete this user ?
-                        </h5>
-                        <p>
-                            Once deleted, this user will no longer be
-                            accessible.
-                        </p>
-                        <div className="text-right mt-6">
-                            <Button
-                                className="ltr:mr-2 rtl:ml-2 capitalize"
-                                variant="twoTone"
-                                onClick={onDialogClose}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                className="capitalize"
-                                variant="solid"
-                                onClick={onDialogOk}
-                                color="red-600"
-                            >
-                                Permanently delete
-                            </Button>
-                        </div>
-                    </Dialog>
-                </>
-                <>
-                    <div className="flex items-center gap-4">
-                        <h2 className="inline dark:text-white">Editors</h2>
-                        <GetUserRole />
+        {
+            'editorId': '3',
+            'userName':'userName 3',
+            'editormail': 'mail 3',
+            'firstName': 'First Name 3',
+            'lastName': 'Last Name 3',
+            'signUpDate': 'Sign Up Date 3',
+            'userStatus': false ,
+            'actions': '1',
+        },
+        {
+            'editorId': '4',
+            'userName':'userName 4',
+            'editormail': 'mail 4',
+            'firstName': 'First Name 4',
+            'lastName': 'Last Name 4',
+            'signUpDate': 'Sign Up Date 4',
+            'userStatus': true ,
+            'actions': '1',
+        },
+    ]
+  return (
+    <div>
+        <>
+                <Dialog
+                    isOpen={dialogIsOpen}
+                    bodyOpenClassName="overflow-hidden"
+                    onClose={onDialogClose}
+                    onRequestClose={onDialogClose}
+                >
+                    <h5 className="mb-4">
+                        Would you like to permanently delete this item ?
+                    </h5>
+                    <p>Once deleted, this item will no longer be accessible.</p>
+                    <div className="text-right mt-6">
+                        <Button
+                            className="capitalize me-2"
+                            variant="solid"
+                            onClick={onDialogOk}
+                            color="red-600"
+                        >
+                            Permanently delete
+                        </Button>
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2 capitalize"
+                            variant="twoTone"
+                            onClick={onDialogClose}
+                        >
+                            Cancel
+                        </Button>
                     </div>
-                    <div className="flex items-center justify-between my-4">
-                        <div style={{ minWidth: 130 }}>
-                            <Select<Option>
-                                size="sm"
-                                isSearchable={false}
-                                value={pageSizeOption.filter(
-                                    (option) =>
-                                        option.value ===
-                                        table.getState().pagination.pageSize
-                                )}
-                                options={pageSizeOption}
-                                onChange={(option) =>
-                                    onSelectChange(option?.value)
-                                }
-                            />
-                        </div>
-                        <DebouncedInput
-                            value={globalFilter ?? ''}
-                            className="p-2 font-lg shadow border border-block"
-                            placeholder="Search Editor..."
-                            onChange={(value) => setGlobalFilter(String(value))}
-                        />
-                    </div>
-                    <Table>
-                        <THead>
-                            {table.getHeaderGroups().map((headerGroup) => (
-                                <Tr key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => {
-                                        return (
-                                            <Th
-                                                key={header.id}
-                                                colSpan={header.colSpan}
-                                                style={{
-                                                    position: 'relative',
-                                                    width: header.getSize(),
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                {header.isPlaceholder ? null : (
-                                                    <div
-                                                        {...{
-                                                            className:
-                                                                header.column.getCanSort()
-                                                                    ? `table-resizer flex items-center justify-center cursor-all-scroll cursor-pointer  w-full   ${
-                                                                          header.column.getIsResizing()
-                                                                              ? 'isResizing'
-                                                                              : ''
-                                                                      }`
-                                                                    : '',
-
-                                                            onClick:
-                                                                header.column.getToggleSortingHandler(),
-                                                        }}
-                                                        onMouseDown={header.getResizeHandler()}
-                                                        onTouchStart={header.getResizeHandler()}
-                                                    >
-                                                        {flexRender(
-                                                            header.column
-                                                                .columnDef
-                                                                .header,
-                                                            header.getContext()
-                                                        )}
-                                                        {
-                                                            <Sorter
-                                                                sort={header.column.getIsSorted()}
-                                                            />
-                                                        }
-                                                    </div>
-                                                )}
-                                            </Th>
-                                        )
-                                    })}
-                                </Tr>
-                            ))}
-                        </THead>
-                        <TBody>
-                            {table.getRowModel().rows.map((row, index) => {
-                                const isOdd = index % 2 === 0
-                                const rowClassName = isOdd
-                                    ? 'text-center bg-[#f5f5f5]'
-                                    : 'text-center'
-                                return (
-                                    <Tr key={row.id} className={rowClassName}>
-                                        {row.getVisibleCells().map((cell) => {
-                                            return (
-                                                <Td
-                                                    key={cell.id}
-                                                    style={{
-                                                        width: cell.column.getSize(),
-                                                    }}
-                                                >
-                                                    {cell?.column?.columnDef
-                                                        .accessorKey ===
-                                                    'userStatus'
-                                                        ? row.original
-                                                              .userStatus
-                                                        : flexRender(
-                                                              cell.column
-                                                                  .columnDef
-                                                                  .cell,
-                                                              cell.getContext()
-                                                          )}
-                                                </Td>
-                                            )
-                                        })}
-                                    </Tr>
-                                )
-                            })}
-                        </TBody>
-                    </Table>
-                    <div className="flex items-center justify-between mt-4">
-                        <Pagination
-                            pageSize={table.getState().pagination.pageSize}
-                            currentPage={
-                                table.getState().pagination.pageIndex + 1
-                            }
-                            total={totalData}
-                            onChange={onPaginationChange}
-                        />
-                    </div>
-                </>
-            </AdaptableCard>
-        </Container>
-    )
+                </Dialog>
+            </>
+        <ViewUserTable showHeader={true}  title='Admins' columns={columns}  tableData={tableData}  />
+    </div>
+  )
 }
 
 export default ViewEditors

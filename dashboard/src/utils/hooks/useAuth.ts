@@ -33,18 +33,35 @@ function useAuth() {
         | undefined
     > => {
         try {
-            const resp = await apiSignIn(values)
+            const resp: any = await apiSignIn(values)
             if (resp.data) {
-                const { token } = resp.data
+                const { token } = resp.data.user
                 dispatch(signInSuccess(token))
                 if (resp.data.user) {
-                    const { name, user_type, _id, email } = resp.data.user
+                    const {
+                        email,
+                        firstName,
+                        lastName,
+                        profilePic,
+                        userName,
+                        _id,
+                        role,
+                        is_verified,
+                        createdAt,
+                        updatedAt,
+                    } = resp.data.user
                     dispatch(
                         setUser({
-                            name: name,
-                            email: email,
-                            _id: _id,
-                            user_type: user_type,
+                            email,
+                            firstName,
+                            lastName,
+                            profilePic,
+                            userName,
+                            _id,
+                            role,
+                            is_verified,
+                            createdAt,
+                            updatedAt,
                         })
                     )
                 }
@@ -70,16 +87,32 @@ function useAuth() {
         try {
             const resp: any = await apiSignUp(values)
             if (resp.data) {
-                const { token } = resp.data
+                const {
+                    email,
+                    firstName,
+                    lastName,
+                    profilePic,
+                    userName,
+                    _id,
+                    role,
+                    is_verified,
+                    createdAt,
+                    updatedAt,
+                } = resp.data.user
                 dispatch(signInSuccess(token))
                 if (resp.data.user) {
-                    const { name, user_type, _id, email } = resp.data.user
                     dispatch(
                         setUser({
-                            name: name,
-                            email: email,
-                            _id: _id,
-                            user_type: user_type,
+                            email,
+                            firstName,
+                            lastName,
+                            profilePic,
+                            userName,
+                            _id,
+                            role,
+                            is_verified,
+                            createdAt,
+                            updatedAt,
                         })
                     )
                 }
@@ -105,10 +138,16 @@ function useAuth() {
         dispatch(signOutSuccess())
         dispatch(
             setUser({
-                name: '',
                 email: '',
+                firstName: '',
+                lastName: '',
+                profilePic: '',
+                userName: '',
                 _id: '',
-                user_type: '',
+                role: '',
+                createdAt: '',
+                is_verified: false,
+                updatedAt: ''
             })
         )
         navigate(appConfig.unAuthenticatedEntryPath)

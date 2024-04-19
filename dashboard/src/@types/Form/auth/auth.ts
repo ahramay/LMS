@@ -44,26 +44,28 @@ export type TSignUpForm = {
 }
 export type SignInCredential = {
     email: string
-    user_type:string
-    _id:string
-    name:string
+    user_type: string
+    _id: string
+    name: string
     userTypeData: InstructorData | OrganizationData | null
 }
 
 export type SignInResponse = {
-    token: string
-    authority?: string[]
-    user?: {
-        name?: string
-        organizationName?: string
-        status?: string
+    status: boolean
+    msg: string
+    user: {
+        userName: string
+        email: string
+        firstName: string
+        lastName: string
+        profilePic: string
+        is_verified: boolean
+        role: string
+        _id: string
+        createdAt: string
+        updatedAt: string
     }
-    completedSteps?: number[]
-    lastCompletedStep?: number
-    nextStepNumber?: number
-    totalSteps?: number
 }
-
 export type SignUpResponse = {
     success: boolean
     message: string

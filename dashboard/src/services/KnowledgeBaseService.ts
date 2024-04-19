@@ -143,3 +143,11 @@ export async function apiGetAllCourse<T>() {
         method: 'get',
     })
 }
+
+
+export async function apiGetAllUser<T>() {
+    return ApiService.fetchData<T>({
+        url: `/auth/users`,
+        method: 'get',
+    })
+}

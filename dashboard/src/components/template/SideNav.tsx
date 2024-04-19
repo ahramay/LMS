@@ -39,8 +39,7 @@ const SideNav = () => {
     const sideNavCollapse = useAppSelector(
         (state) => state.theme.layout.sideNavCollapse
     )
-    const userAuthority = useAppSelector((state) => state.auth.user.user_type)
-
+    const userAuthority = useAppSelector((state) => state.auth.user.role)
     const { larger } = useResponsive()
 
     const sideNavColor = () => {

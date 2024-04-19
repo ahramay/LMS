@@ -1,11 +1,10 @@
-import { ISignUpForm } from '@/@types/Form/auth/auth'
+import { ISignUpForm, SignInResponse } from '@/@types/Form/auth/auth'
 import ApiService from './ApiService'
 import type {
     SignInCredential,
     SignUpCredential,
     ForgotPassword,
     ResetPassword,
-    SignInResponse,
     SignUpResponse,
 } from '@/@types/auth'
 
@@ -21,8 +20,7 @@ export async function apiSignUp(data: ISignUpForm) {
     return ApiService.fetchData<SignUpResponse>({
         url: '/auth/register',
         method: 'post',
-        data
-
+        data,
     })
 }
 

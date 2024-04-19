@@ -11,8 +11,8 @@ import Button from '@/components/ui/Button'
 import { HiOutlinePencil } from 'react-icons/hi'
 import { MdDone, MdDelete } from 'react-icons/md'
 import UserTableViewtypp from '@/@types/UserTableViewtype'
-import Tag from '@/components/ui/Tag'
 
+import Dialog from '@/components/ui/Dialog'
 
 const ViewInstructor = () => {
 
@@ -23,12 +23,12 @@ const ViewInstructor = () => {
         console.log("Dialogopen")
     }
 
-    const onDialogClose = (e: MouseEvent) => {
+    const onDialogClose = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         console.log('onDialogClose', e)
         setIsOpen(false)
     }
 
-    const onDialogOk = (e: MouseEvent) => {
+    const onDialogOk = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         console.log('onDialogOk', e)
         setIsOpen(false)
     }
@@ -138,16 +138,7 @@ const ViewInstructor = () => {
             'firstName': 'First Name 1',
             'lastName': 'Last Name 1',
             'signUpDate': 'Sign Up Date 1',
-            'userStatus':
-                true ? (
-                    <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
-                        Pending
-                    </Tag>
-                ) : (
-                    <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
-                        approved
-                    </Tag>
-                ),
+            'userStatus':true ,
             'actions': '1',
         },
         {
@@ -157,16 +148,7 @@ const ViewInstructor = () => {
             'firstName': 'First Name 2',
             'lastName': 'Last Name 2 ',
             'signUpDate': 'Sign Up Date 2',
-            'userStatus':
-                false ? (
-                    <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
-                        Pending
-                    </Tag>
-                ) : (
-                    <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
-                        approved
-                    </Tag>
-                ),
+            'userStatus':false,
             'actions': '1',
         },
         {
@@ -176,16 +158,7 @@ const ViewInstructor = () => {
             'firstName': 'First Name 3',
             'lastName': 'Last Name 3',
             'signUpDate': 'Sign Up Date 3',
-            'userStatus':
-                false ? (
-                    <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
-                        Pending
-                    </Tag>
-                ) : (
-                    <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
-                        approved
-                    </Tag>
-                ),
+            'userStatus':false ,
             'actions': '1',
         },
         {
@@ -195,22 +168,43 @@ const ViewInstructor = () => {
             'firstName': 'First Name 4',
             'lastName': 'Last Name 4',
             'signUpDate': 'Sign Up Date 4',
-            'userStatus':
-                true ? (
-                    <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
-                        Pending
-                    </Tag>
-                ) : (
-                    <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
-                        approved
-                    </Tag>
-                ),
+            'userStatus':true ,
             'actions': '1',
         },
     ]
   return (
     <div>
-        <ViewUserTable dialogIsOpen={dialogIsOpen} onDialogOk={onDialogOk} onDialogClose={onDialogClose} title='Instructor' columns={columns}  tableData={tableData}  />
+        <>
+                <Dialog
+                    isOpen={dialogIsOpen}
+                    bodyOpenClassName="overflow-hidden"
+                    onClose={onDialogClose}
+                    onRequestClose={onDialogClose}
+                >
+                    <h5 className="mb-4">
+                        Would you like to permanently delete this item ?
+                    </h5>
+                    <p>Once deleted, this item will no longer be accessible.</p>
+                    <div className="text-right mt-6">
+                        <Button
+                            className="capitalize me-2"
+                            variant="solid"
+                            onClick={onDialogOk}
+                            color="red-600"
+                        >
+                            Permanently delete
+                        </Button>
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2 capitalize"
+                            variant="twoTone"
+                            onClick={onDialogClose}
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </Dialog>
+            </>
+        <ViewUserTable showHeader={true}  title='Instructor' columns={columns}  tableData={tableData}  />
     </div>
   )
 }

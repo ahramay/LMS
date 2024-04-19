@@ -307,11 +307,19 @@ function _DataTable<T>(
                                         {row.getVisibleCells().map((cell) => {
                                             return (
                                                 <Td key={cell.id}>
-                                                    {flexRender(
-                                                        cell.column.columnDef
-                                                            .cell,
-                                                        cell.getContext()
-                                                    )}
+
+                                                 {
+                                                       console.log(cell)
+                                                 }
+
+                                                {cell?.column?.columnDef.accessorKey === 'status'
+                                                        ? row?.original
+                                                              .status
+                                                        : flexRender(
+                                                            cell.column.columnDef
+                                                                .cell,
+                                                            cell.getContext()
+                                                        )}
                                                 </Td>
                                             )
                                         })}

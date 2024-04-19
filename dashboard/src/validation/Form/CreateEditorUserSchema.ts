@@ -1,13 +1,10 @@
 import * as Yup from 'yup'
 
 const CreateEditorUserSchema = Yup.object().shape({
-    firstName: Yup.string().required('First Name is required'),
+    firstName: Yup.string().min(3, 'First Name must be at least 3 characters').required('First Name is required'),
     middleName: Yup.string().optional(),
     role: Yup.array().min(1, 'Select at least one option!'),
-    
-    
-
-    lastName: Yup.string().required('Last Name is required'),
+    lastName: Yup.string().min(3, 'First Name must be at least 3 characters').required('Last Name is required'),
     email: Yup.string().required('Email is required').email(),
     userName: Yup.string().required('User Name is required'),
     password: Yup.string()

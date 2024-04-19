@@ -15,7 +15,6 @@ const CourseCard = (props: IProps) => {
     const navigation = useNavigate()
     const { data } = props
     const { user } = useAppSelector((state) => state.auth)
-    const isCreator = data.createdBy._id === user._id
     const dispatch = useAppDispatch()
     const handleCardClick = () => {
         navigation(`/course/${data._id}`)
@@ -29,7 +28,7 @@ const CourseCard = (props: IProps) => {
     }
     return (
         <>
-            {data ? (
+            {data && data ? (
                 <div
                     key={data._id}
                     className="flex cursor-pointer flex-col border hover:shadow-2xl rounded-md justify-start ms-4"
@@ -68,7 +67,7 @@ const CourseCard = (props: IProps) => {
                             </h6>
                         </div>
                         <hr />
-                        {isCreator && (
+                        {data.isCreatedByMe && (
                             <Tooltip title="Edit">
                                 <Button
                                     shape="circle"

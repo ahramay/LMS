@@ -18,17 +18,6 @@ export interface Instructor {
     updatedAt: string
 }
 
-export type SignInResponse = {
-    token: string
-    user: {
-        name: string
-        organizationName: string
-        authority: string[]
-        status: string
-        email: string
-    }
-}
-
 export type SignUpResponse = {
     status: string
     mesg: string

@@ -37,14 +37,14 @@ export const protectedRoutes = [
         authority: [],
     },
     {
-        key: 'collapseMenu.item1',
+        key: 'invoicelist',
         path: '/invoice-list',
         component: lazy(() => import('@/views/Invoice/InvoiceList')),
         authority: [],
     },
     {
-        key: 'collapseMenu.item2',
-        path: '/invoice-details',
+        key: 'invoicelist.details',
+        path: '/invoice-list/:invoice',
         component: lazy(() => import('@/views/Invoice/InvoiceDetail')),
         authority: [],
     },
@@ -184,6 +184,12 @@ export const protectedRoutes = [
         key :'s-admin.admin.create',
         path :'s-admin/create-admin',
         component: lazy(() => import('@/views/admin/createAdmin/CreatAdmin')),
+        authority: [],
+    },
+    {
+        key :'groupMenu.casdollapse.profilepiclist',
+        path :'/profile-picture/list',
+        component: lazy(() => import('@/views/approvals/profile-pic-approval/ProfilePictureApproval')),
         authority: [],
     },
 ]

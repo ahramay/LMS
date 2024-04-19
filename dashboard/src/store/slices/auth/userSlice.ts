@@ -2,19 +2,29 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants'
 
 export type UserState = {
-    name: string
+    userName: string
     email: string
+    firstName: string
+    lastName: string
+    profilePic: string
+    is_verified: boolean
+    role: string
     _id: string
-    user_type: string
-    courseCount: number
+    createdAt: string
+    updatedAt: string
 }
 
 const initialState: UserState = {
-    name: '',
-    email: '',
     _id: '',
-    user_type: '',
-    courseCount: 0,
+    email: '',
+    firstName: '',
+    is_verified: false,
+    lastName: '',
+    profilePic: '',
+    role: '',
+    userName: '',
+    updatedAt: '',
+    createdAt: '',
 }
 
 const userSlice = createSlice({
@@ -23,10 +33,15 @@ const userSlice = createSlice({
     reducers: {
         setUser(state, action: PayloadAction<UserState>) {
             state.email = action.payload.email
-            state.name = action.payload.name
+            state.firstName = action.payload.firstName
+            state.lastName = action.payload.lastName
+            state.profilePic = action.payload.profilePic
+            state.userName = action.payload.userName
             state._id = action.payload._id
-            state.user_type = action.payload.user_type
-            state.courseCount = action.payload.courseCount
+            state.role = action.payload.role
+            state.is_verified = action.payload.is_verified
+            state.createdAt = action.payload.createdAt
+            state.updatedAt = action.payload.updatedAt
         },
     },
 })

@@ -16,6 +16,11 @@ import axios from 'axios'
 import appConfig from '@/configs/app.config'
 import { PERSIST_STORE_NAME } from '@/constants/app.constant'
 import deepParseJson from '@/utils/deepParseJson'
+import { useNavigate, useParams } from 'react-router-dom'
+import { newUser } from '@/store/slices/auth/createUser'
+import { useAppDispatch } from '@/store'
+import ShowToast from '@/components/ui/Notification/ShowToast'
+// import { }
 
 type FormikData = {
     firstName: string
@@ -84,6 +89,9 @@ const readFileAsBase64 = (file: File): Promise<string | ArrayBuffer | null> => {
 const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
   const [avatarImg, setAvatarImg] = useState<string | null>(null)
   const [generatedPassword, setGeneratedPassword] = useState<string>('');
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
 
   // edit user Form config
   const selectedUser = null
@@ -139,6 +147,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
         formData.append('email', values.email)
         formData.append('userName', values.userName)
         formData.append('password', values.password)
+        formData.append('profilePic', values.profilePic)
         values.role.forEach(role => {
             formData.append('role', String(role));
         });
@@ -174,40 +183,48 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
     ) => {
         setSubmitting(true)
         const formData = createFormData(values);
-        console.log(values,"form values");
+        console.log("formData>>>>>",formData);
         try {
             const rawPersistData = localStorage.getItem(PERSIST_STORE_NAME)
             const persistData = deepParseJson(rawPersistData)
             const accessToken = (persistData as any).auth.session.token
             const baseUrl = `${appConfig.baseUrl}/${appConfig.apiPrefix}`
-                // const response = await makeRequest(
-                //     'post',
-                //     `${baseUrl}/auth/create`,
-                //     formData,
-                //     accessToken
-                // )
-                // if(response.data){
-                //     toast.push(
-                //         <Notification
-                //             title={` ${response.data} Successfully created `}
-                //             type="success"
-                //         />,
-                //         {
-                //             placement: 'top-center',
-                //         }
-                //     )
-                //     setSubmitting(false);
-                // }
-        } catch (error) {
-            toast.push(
-                <Notification
-                    title="User not created"
-                    type="danger"
-                />,
-                {
-                    placement: 'top-center',
+                const response = await makeRequest(
+                    'post',
+                    `${baseUrl}/auth/create`,
+                    formData,
+                    accessToken
+                )
+                console.log(response.msg);
+                if(response.msg === "user craeted successfully!"){
+                    toast.push(
+                        <Notification
+                            title={` user craeted successfully! `}
+                            type="success"
+                        />,
+                        {
+                            placement: 'top-center',
+                        }
+                    )
+                    setSubmitting(false);
+                    navigate('/users')
                 }
-            )
+                if(response){
+                    const { firstName, middleName, lastName, email, userName, profilePic,password, role} = response.userWithoutPassword;
+                    dispatch(newUser({
+                        firstName,
+                        middleName, 
+                        lastName, 
+                        email, 
+                        userName, 
+                        profilePic,
+                        password, 
+                        role,
+                    }))
+                   
+                }
+
+        } catch (error) {
             console.log(error)
             setSubmitting(false)
         }
@@ -224,7 +241,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
         role:[],
         password: generatedPassword,
     })
-   
+
     return (
         <Formik
             enableReinitialize
@@ -232,7 +249,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
                 ...(selectedUser === 1
                     ? selectedUser
                     : courseInitialValues()),
-                profilePic:  null? null :'',
+                profilePic: null? null :'',
             }}
 
             validationSchema={CreateEditorUserSchema}

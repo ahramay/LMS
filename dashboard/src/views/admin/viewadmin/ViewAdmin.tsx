@@ -1,42 +1,38 @@
 import { useState } from 'react'
-import type {
-    ColumnDef,
-} from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import type { CellContext } from '@/components/shared/DataTable'
 import ViewUserTable from '@/components/shared/viewusertable/ViewUserTable'
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { BsThreeDotsVertical } from 'react-icons/bs'
 import Dropdown from '@/components/ui/Dropdown'
 import Button from '@/components/ui/Button'
 import { HiOutlinePencil } from 'react-icons/hi'
 import { MdDone, MdDelete } from 'react-icons/md'
-import UserTableViewtypp from "@/@types/UserTableViewtype"
-import Tag from '@/components/ui/Tag'
-
+import UserTableViewtypp from '@/@types/UserTableViewtype'
+import Dialog from '@/components/ui/Dialog'
 
 const ViewAdmin = () => {
-
     const [dialogIsOpen, setIsOpen] = useState<boolean>(false)
 
     const openDialog = () => {
         setIsOpen(true)
-        console.log("Dialogopen")
+        console.log('Dialogopen')
     }
 
-    const onDialogClose = (e: MouseEvent) => {
+    const onDialogClose = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         console.log('onDialogClose', e)
         setIsOpen(false)
     }
 
-    const onDialogOk = (e: MouseEvent) => {
+    const onDialogOk = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         console.log('onDialogOk', e)
         setIsOpen(false)
     }
-    
-   
-    const handleAction = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
-        console.log('Action clicked', cellProps)
 
+    const handleAction = (
+        cellProps: CellContext<UserTableViewtypp, unknown>
+    ) => {
+        console.log('Action clicked', cellProps)
     }
 
     const columns = useMemo<ColumnDef<UserTableViewtypp>[]>(
@@ -51,7 +47,7 @@ const ViewAdmin = () => {
             },
             {
                 header: 'Email',
-                accessorKey: 'editormail',
+                accessorKey: 'email',
             },
             {
                 header: 'First Name',
@@ -74,14 +70,17 @@ const ViewAdmin = () => {
                 id: 'action',
                 cell: (props) => {
                     const Toggle = (
-                        <span className='cursor-pointer rotate-180'>
-                            <BsThreeDotsVertical size={20}/>
+                        <span className="cursor-pointer rotate-180">
+                            <BsThreeDotsVertical size={20} />
                         </span>
                     )
                     return (
                         <>
-                            <Dropdown placement="bottom-end" renderTitle={Toggle}>
-                                <Dropdown.Item eventKey="a" >
+                            <Dropdown
+                                placement="bottom-end"
+                                renderTitle={Toggle}
+                            >
+                                <Dropdown.Item eventKey="a">
                                     <Button
                                         size="xs"
                                         onClick={() => handleAction(props)}
@@ -89,7 +88,6 @@ const ViewAdmin = () => {
                                         variant="solid"
                                         color="blue-600"
                                         icon={<HiOutlinePencil size={15} />}
-
                                     >
                                         <span>Edit</span>
                                     </Button>
@@ -130,89 +128,89 @@ const ViewAdmin = () => {
         []
     )
 
-    const tableData=[
+    const tableData = [
         {
-            'editorId': '1',
-            'userName':'userName 1',
-            'editormail': 'mail 1',
-            'firstName': 'First Name 1',
-            'lastName': 'Last Name 1',
-            'signUpDate': 'Sign Up Date 1',
-            'userStatus':
-                true ? (
-                    <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
-                        Pending
-                    </Tag>
-                ) : (
-                    <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
-                        approved
-                    </Tag>
-                ),
-            'actions': '1',
+            editorId: '1',
+            userName: 'userName 1',
+            editormail: 'mail 1',
+            firstName: 'First Name 1',
+            lastName: 'Last Name 1',
+            signUpDate: 'Sign Up Date 1',
+            userStatus: true,
+            actions: '1',
         },
         {
-            'editorId': '2',
-            'userName':'userName 2',
-            'editormail': 'mail 2',
-            'firstName': 'First Name 2',
-            'lastName': 'Last Name 2 ',
-            'signUpDate': 'Sign Up Date 2',
-            'userStatus':
-                false ? (
-                    <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
-                        Pending
-                    </Tag>
-                ) : (
-                    <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
-                        approved
-                    </Tag>
-                ),
-            'actions': '1',
+            editorId: '2',
+            userName: 'userName 2',
+            editormail: 'mail 2',
+            firstName: 'First Name 2',
+            lastName: 'Last Name 2 ',
+            signUpDate: 'Sign Up Date 2',
+            userStatus: false,
+            actions: '1',
         },
         {
-            'editorId': '3',
-            'userName':'userName 3',
-            'editormail': 'mail 3',
-            'firstName': 'First Name 3',
-            'lastName': 'Last Name 3',
-            'signUpDate': 'Sign Up Date 3',
-            'userStatus':
-                false ? (
-                    <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
-                        Pending
-                    </Tag>
-                ) : (
-                    <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
-                        approved
-                    </Tag>
-                ),
-            'actions': '1',
+            editorId: '3',
+            userName: 'userName 3',
+            editormail: 'mail 3',
+            firstName: 'First Name 3',
+            lastName: 'Last Name 3',
+            signUpDate: 'Sign Up Date 3',
+            userStatus: false,
+            actions: '1',
         },
         {
-            'editorId': '4',
-            'userName':'userName 4',
-            'editormail': 'mail 4',
-            'firstName': 'First Name 4',
-            'lastName': 'Last Name 4',
-            'signUpDate': 'Sign Up Date 4',
-            'userStatus':
-                true ? (
-                    <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
-                        Pending
-                    </Tag>
-                ) : (
-                    <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
-                        approved
-                    </Tag>
-                ),
-            'actions': '1',
+            editorId: '4',
+            userName: 'userName 4',
+            editormail: 'mail 4',
+            firstName: 'First Name 4',
+            lastName: 'Last Name 4',
+            signUpDate: 'Sign Up Date 4',
+            userStatus: true,
+            actions: '1',
         },
     ]
-  return (
-    <div>
-        <ViewUserTable dialogIsOpen={dialogIsOpen} onDialogOk={onDialogOk} onDialogClose={onDialogClose} title='Admins' columns={columns}  tableData={tableData}  />
-    </div>
-  )
+    return (
+        <div>
+            <>
+                <Dialog
+                    isOpen={dialogIsOpen}
+                    bodyOpenClassName="overflow-hidden"
+                    onClose={onDialogClose}
+                    onRequestClose={onDialogClose}
+                >
+                    <h5 className="mb-4">
+                        Would you like to permanently delete this item ?
+                    </h5>
+                    <p>Once deleted, this item will no longer be accessible.</p>
+                    <div className="text-right mt-6">
+                        <Button
+                            className="capitalize me-2"
+                            variant="solid"
+                            onClick={onDialogOk}
+                            color="red-600"
+                        >
+                            Permanently delete
+                        </Button>
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2 capitalize"
+                            variant="twoTone"
+                            onClick={onDialogClose}
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </Dialog>
+            </>
+            <ViewUserTable
+                showHeader={true}
+                
+                title="Admins"
+                columns={columns}
+                tableData={tableData}
+            />
+        </div>
+    )
 }
 
 export default ViewAdmin

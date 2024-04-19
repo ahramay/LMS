@@ -3,7 +3,9 @@ import Container from '@/components/shared/Container'
 import AdaptableCard from '@/components/shared/AdaptableCard'
 import GetUserRole from '@/components/shared/GetUserRole'
 import NewEditorform from './NewEditorform'
+import CreateUserForm from '@/components/shared/CreateUser/CreateUserForm'
 const CreateEditor = () => {
+  const userRoles =['Editor','Student']
   return (
     <Container>
         <AdaptableCard>
@@ -11,7 +13,8 @@ const CreateEditor = () => {
                     <h3 className='inline dark:text-white'>Create a New Editor</h3>
                     <GetUserRole/>
             </div>
-            <NewEditorform/>
+            {/* <NewEditorform/> */}
+            <CreateUserForm userRoles={userRoles}/>
 
         </AdaptableCard>
     </Container>

@@ -11,6 +11,7 @@ const initialState: CourseState = {
     loadingAllCourses: false,
     allCourseList: [],
     selectedCourse: {
+        isCreatedByMe: false,
         _id: '',
         duration: '',
         image: '',
@@ -19,9 +20,16 @@ const initialState: CourseState = {
         objectivesTitle: '',
         postTitle: '',
         videoUrl: '',
-        price: '',
+        price: 0,
         title: '',
         topic: '',
+        access: [],
+        createdBy: {
+            _id: '',
+            email: '',
+            name: '',
+            user_type: '',
+        },
     },
 }
 export const SLICE_NAME = 'courseSlice'
@@ -51,6 +59,7 @@ const courseSlice = createSlice({
                 objectivesTitle,
                 postTitle,
                 videoUrl,
+                isCreatedByMe,
             } = action.payload
             const { selectedCourse } = state
             selectedCourse._id = _id
@@ -64,6 +73,7 @@ const courseSlice = createSlice({
             selectedCourse.objectivesTitle = objectivesTitle
             selectedCourse.postTitle = postTitle
             selectedCourse.videoUrl = videoUrl
+            selectedCourse.isCreatedByMe = isCreatedByMe
         },
         addNewCourse(state, action: PayloadAction<Course>) {
             state.allCourseList.unshift(action.payload)
@@ -72,7 +82,7 @@ const courseSlice = createSlice({
             const index = state.allCourseList.findIndex(
                 (course) => course._id === action.payload._id
             )
-            if (index >-1){
+            if (index > -1) {
                 state.allCourseList[index] = action.payload
             }
         },
@@ -94,5 +104,5 @@ const courseSlice = createSlice({
     },
 })
 
-export const { setCourse, addNewCourse,updateCourse } = courseSlice.actions
+export const { setCourse, addNewCourse, updateCourse } = courseSlice.actions
 export default courseSlice.reducer

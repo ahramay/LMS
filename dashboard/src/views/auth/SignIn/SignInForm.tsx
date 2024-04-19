@@ -62,19 +62,35 @@ const SignInForm = (props: SignInFormProps) => {
     const onFormSubmit: SubmitHandler<any> = (data) => {
         setLoading(true)
         apiSignIn(data)
-            .then((resp:any) => {
-                const { token } = resp.data
-                const { name, user_type, _id, email, courseCount } = resp.data.user
+            .then((resp: any) => {
+                const {
+                    token,
+                    email,
+                    firstName,
+                    lastName,
+                    profilePic,
+                    userName,
+                    _id,
+                    role,
+                    is_verified,
+                    createdAt,
+                    updatedAt,
+                } = resp.data.user
                 // Dispatch Sing In Success with Token
                 dispatch(signInSuccess(token))
                 // Dispatch User Data To setUser
                 dispatch(
                     setUser({
-                        name: name,
-                        email: email,
-                        _id: _id,
-                        user_type: user_type,
-                        courseCount:courseCount
+                        email,
+                        firstName,
+                        lastName,
+                        profilePic,
+                        userName,
+                        _id,
+                        role,
+                        is_verified,
+                        createdAt,
+                        updatedAt,
                     })
                 )
 
@@ -107,55 +123,54 @@ const SignInForm = (props: SignInFormProps) => {
             })
     }
 
-    const googleLogin = useGoogleLogin({
-        onSuccess: async (response: any) => {
-            setLoading(true)
-            apiGoogleLogin({ access_token: response.access_token })
-                .then((res) => {
-                    setLoading(false)
-                    ShowToast('success', 'Success fully Registered')
-                    const { token } = res.data
-                    const { name, user_type, _id, email } = res.data.user
-                    // Dispatch Sing In Success with Token
-                    dispatch(signInSuccess(token))
-                    // Dispatch User Data To setUser
-                    dispatch(
-                        setUser({
-                            name: name,
-                            email: email,
-                            _id: _id,
-                            user_type: user_type,
-                        })
-                    )
-                })
-                .catch((error) => {
-                    setLoading(false)
+    // const googleLogin = useGoogleLogin({
+    //     onSuccess: async (response: any) => {
+    //         setLoading(true)
+    //         apiGoogleLogin({ access_token: response.access_token })
+    //             .then((res) => {
+    //                 setLoading(false)
+    //                 ShowToast('success', 'Success fully Registered')
+    //                 const { token, name, role, _id, email } = res.data.user
+    //                 // Dispatch Sing In Success with Token
+    //                 dispatch(signInSuccess(token))
+    //                 // Dispatch User Data To setUser
+    //                 dispatch(
+    //                     setUser({
+    //                         name: name,
+    //                         email: email,
+    //                         _id: _id,
+    //                         role,
+    //                     })
+    //                 )
+    //             })
+    //             .catch((error) => {
+    //                 setLoading(false)
 
-                    if (
-                        error.response &&
-                        error.response.data &&
-                        error.response.data.errors
-                    ) {
-                        ShowToast('danger', 'Some Field required')
-                        // Set the server-side validation errors in the form state
-                        const serverErrors = error.response.data.errors
-                        for (const field in serverErrors) {
-                            setError(field as any, {
-                                message: serverErrors[field],
-                            })
-                        }
-                    } else if (
-                        error.response &&
-                        error.response.status === 403
-                    ) {
-                        ShowToast('warning', 'Please register first.')
-                        setMessage('Please register first.')
-                    } else {
-                        setMessage('something Wrong')
-                    }
-                })
-        },
-    })
+    //                 if (
+    //                     error.response &&
+    //                     error.response.data &&
+    //                     error.response.data.errors
+    //                 ) {
+    //                     ShowToast('danger', 'Some Field required')
+    //                     // Set the server-side validation errors in the form state
+    //                     const serverErrors = error.response.data.errors
+    //                     for (const field in serverErrors) {
+    //                         setError(field as any, {
+    //                             message: serverErrors[field],
+    //                         })
+    //                     }
+    //                 } else if (
+    //                     error.response &&
+    //                     error.response.status === 403
+    //                 ) {
+    //                     ShowToast('warning', 'Please register first.')
+    //                     setMessage('Please register first.')
+    //                 } else {
+    //                     setMessage('something Wrong')
+    //                 }
+    //             })
+    //     },
+    // })
 
     return (
         <div className={className}>

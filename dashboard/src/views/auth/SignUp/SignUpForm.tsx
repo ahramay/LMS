@@ -76,21 +76,23 @@ const SignUpForm = (props: SignUpFormProps) => {
         { value: 'Organization', disabled: false },
     ])
     const [selectedOptions, setSelectedOptions] = useState<string[]>([])
-    const handleChange = (selectedOptions: any,dataType:string) => {
-        setSelectedOptions(selectedOptions);
-        if(dataType === 'skills'){
+    const handleChange = (selectedOptions: any, dataType: string) => {
+        setSelectedOptions(selectedOptions)
+        if (dataType === 'skills') {
             setValue(
                 'userTypeData.skills',
                 selectedOptions.map((option: any) => option.value)
             )
-        }else{
+        } else {
             setValue(
                 'userTypeData.expertise',
                 selectedOptions.map((option: any) => option.value)
             )
         }
-        
     }
+
+ 
+    
 
     const [remainingChars, setRemainingChars] = useState(MAX_CHARS)
 
@@ -153,9 +155,9 @@ const SignUpForm = (props: SignUpFormProps) => {
     )
     const onFileUpload = (files: File[], form: any) => {
         if (files && files.length > 0) {
-            const uploadedFile = files[0] 
-            const fileNameWithExtension = uploadedFile.name 
-            console.log(fileNameWithExtension,"fileNameWithExtension")
+            const uploadedFile = files[0]
+            const fileNameWithExtension = uploadedFile.name
+            console.log(fileNameWithExtension, 'fileNameWithExtension')
         }
     }
 
@@ -166,7 +168,7 @@ const SignUpForm = (props: SignUpFormProps) => {
     // ]
 
     // User SignUp By their Email
-    const onFormSubmit: SubmitHandler<ISignUpForm> = async (data) => {     
+    const onFormSubmit: SubmitHandler<ISignUpForm> = async (data) => {
         data.user_type = userType
         setLoading(true)
         apiSignUp(data)
@@ -206,17 +208,34 @@ const SignUpForm = (props: SignUpFormProps) => {
                 .then((res) => {
                     setLoading(false)
                     ShowToast('success', 'Success fully Registered')
-                    const { token } = res.data
-                    const { name, user_type, _id, email } = res.data.user
+                    const {
+                        token,
+                        email,
+                        firstName,
+                        lastName,
+                        profilePic,
+                        userName,
+                        _id,
+                        role,
+                        is_verified,
+                        createdAt,
+                        updatedAt,
+                    } = res.data.user
                     // Dispatch Sing In Success with Token
                     dispatch(signInSuccess(token))
                     // Dispatch User Data To setUser
                     dispatch(
                         setUser({
-                            name: name,
-                            email: email,
-                            _id: _id,
-                            user_type: user_type,
+                            email,
+                            firstName,
+                            lastName,
+                            profilePic,
+                            userName,
+                            _id,
+                            role,
+                            is_verified,
+                            createdAt,
+                            updatedAt,
                         })
                     )
                 })
@@ -338,8 +357,10 @@ const SignUpForm = (props: SignUpFormProps) => {
                                 <label className="form-label mb-2">
                                     Profile Pic
                                 </label>
-                                <Upload draggable showList 
-                                     onChange={(files,form) =>
+                                <Upload
+                                    draggable
+                                    showList
+                                    onChange={(files, form) =>
                                         onFileUpload(files, form)
                                     }
                                 >
@@ -441,7 +462,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                                     size="sm"
                                     value={selectedOptions}
                                     onChange={handleChange}
-                                    datatype='skills'
+                                    datatype="skills"
                                 />
                                 <p className="text-red-600">
                                     {errors.userTypeData &&
@@ -498,7 +519,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                                     options={skillsList}
                                     size="sm"
                                     value={selectedOptions}
-                                    datatype='expertise'
+                                    datatype="expertise"
                                     onChange={handleChange}
                                 />
                                 <p className="text-red-600">
