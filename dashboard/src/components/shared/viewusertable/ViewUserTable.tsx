@@ -116,7 +116,7 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
         { value: 50, label: '50 / page' },
     ]
 
-    const totalData = tableData.length
+    const totalData = userData.usersData.length
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
