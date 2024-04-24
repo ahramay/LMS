@@ -72,7 +72,6 @@ const ViewNormalUser = () => {
                         <Tooltip title="View">
                             <span
                                 className={`cursor-pointer p-2 hover:text-orange-500`}
-                            // onClick={onView}
                             >
                                 <HiOutlineEye />
                             </span>
@@ -80,7 +79,6 @@ const ViewNormalUser = () => {
                         <Tooltip title="Edit">
                             <span
                                 className={`cursor-pointer p-2 hover:text-blue-400`}
-                            // onClick={onView}
                             >
                                 <HiOutlinePencil/>
                             </span>

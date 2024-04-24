@@ -83,17 +83,19 @@ const dashboardCards = [
 
                     <div>
                         <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Expiry From: <span className="text-red-500">*</span></p>
-                        <select className="py-[8px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]">
+                        <input type="date" className="py-[6px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]"></input>
+                        {/* <select className="py-[8px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]">
                             <option className="border-[1px]" value="Course">Select Course</option>
                             
-                        </select>
+                        </select> */}
                     </div>
 
                     <div>
                         <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Expiry To: <span className="text-red-500">*</span></p>
-                        <select className="py-[8px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]">
+                        <input type="date" className="py-[6px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]"></input>
+                        {/* <select className="py-[8px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]">
                             <option className="border-[1px]" value="Course">Select Course</option>
-                        </select>
+                        </select> */}
                     </div>
 
                     <div>
