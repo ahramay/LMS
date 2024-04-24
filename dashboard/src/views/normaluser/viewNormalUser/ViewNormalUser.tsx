@@ -71,7 +71,7 @@ const ViewNormalUser = () => {
                     <span className='cursor-pointer rotate-180'>
                         <Tooltip title="View">
                             <span
-                                className={`cursor-pointer p-2`}
+                                className={`cursor-pointer p-2 hover:text-orange-500`}
                             // onClick={onView}
                             >
                                 <HiOutlineEye />
@@ -79,7 +79,7 @@ const ViewNormalUser = () => {
                         </Tooltip>
                         <Tooltip title="Edit">
                             <span
-                                className={`cursor-pointer p-2`}
+                                className={`cursor-pointer p-2 hover:text-blue-400`}
                             // onClick={onView}
                             >
                                 <HiOutlinePencil/>
@@ -87,7 +87,7 @@ const ViewNormalUser = () => {
                         </Tooltip>
                         <Tooltip title="Delete">
                             <span
-                                className="cursor-pointer p-2 hover:text-red-500"
+                                className="cursor-pointer p-2 hover:text-red-600"
                             // onClick={onDelete}
                             >
                                 <HiOutlineTrash />
