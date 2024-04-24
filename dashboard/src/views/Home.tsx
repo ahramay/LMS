@@ -70,7 +70,7 @@ const dashboardCards = [
                 </div>
 
                 
-                <div className="flex gap-[20px] mt-[30px]">
+                <div className="flex gap-[15px] mt-[30px]">
                     <div>
                         <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Course Completed: <span className="text-red-500">*</span></p>
                         <select className="py-[8px] pl-[8px] pr-[24px] rounded-[7px] border-[1.6px]">
@@ -83,7 +83,7 @@ const dashboardCards = [
 
                     <div>
                         <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Expiry From: <span className="text-red-500">*</span></p>
-                        <input type="date" className="py-[6px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]"></input>
+                        <input type="date" className="py-[5px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]"></input>
                         {/* <select className="py-[8px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]">
                             <option className="border-[1px]" value="Course">Select Course</option>
                             
@@ -92,7 +92,7 @@ const dashboardCards = [
 
                     <div>
                         <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Expiry To: <span className="text-red-500">*</span></p>
-                        <input type="date" className="py-[6px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]"></input>
+                        <input type="date" className="py-[5px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]"></input>
                         {/* <select className="py-[8px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]">
                             <option className="border-[1px]" value="Course">Select Course</option>
                         </select> */}
@@ -100,7 +100,7 @@ const dashboardCards = [
 
                     <div>
                         <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Part of Company:</p>
-                        <select className="py-[8px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]">
+                        <select className="py-[8px] pl-[8px] rounded-[7px] border-[1.6px]">
                             <option className="border-[1px]" value="Course">Select Course</option>
                             <option className="py-[8px]" value="Html">Html Course</option>
                             <option className="py-[8px]" value="Css">Css Course</option>
@@ -110,7 +110,7 @@ const dashboardCards = [
 
                     <div>
                         <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Company:</p>
-                        <select className="py-[8px] px-[8px] pr-[10px] rounded-[7px] border-[1.6px]">
+                        <select className="py-[8px] pl-[8px] rounded-[7px] border-[1.6px]">
                             <option className="border-[1px]" value="Course">Select Course</option>
                             <option className="py-[8px]" value="Html">Html Course</option>
                             <option className="py-[8px]" value="Css">Css Course</option>
@@ -120,7 +120,7 @@ const dashboardCards = [
                 
                 </div>
 
-                <div className="flex gap-[20px] mt-[30px] items-end">
+                <div className="flex gap-[15px] mt-[30px] items-end">
                     <div>
                         <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Not Completed Course:</p>
                         <select className="py-[8px] pl-[8px] pr-[33px] rounded-[7px] border-[1.6px]">
@@ -133,26 +133,28 @@ const dashboardCards = [
 
                     <div>
                         <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Not Completed From:</p>
-                        <select className="py-[8px] pl-[8px] pr-[39px] rounded-[7px] border-[1.6px]">
+                        <input type="date" className="py-[5px] pl-[8px] pr-[33px] rounded-[7px] border-[1.6px]"></input>
+                        {/* <select className="py-[8px] pl-[8px] pr-[39px] rounded-[7px] border-[1.6px]">
                             <option className="border-[1px]" value="Course">Select Course</option>
                             
-                        </select>
+                        </select> */}
                     </div>
 
                     <div>
                         <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Not Completed To:</p>
-                        <select className="py-[8px] pl-[8px] pr-[33px] rounded-[7px] border-[1.6px]">
-                            <option className="border-[1px]" value="Course">Select Course</option>
-                        </select>
+                        <input type="date" className="py-[5px] pl-[8px] pr-[20px] rounded-[7px] border-[1.6px]"></input>
+                        {/* <select className="py-[8px] pl-[8px] pr-[33px] rounded-[7px] border-[1.6px]">
+                            <option value="Course">Select Course</option>
+                        </select> */}
                     </div>
 
                     <div>
                         <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Email:</p>
-                        <select className="py-[8px] pl-[8px] pr-[10px] rounded-[7px] border-[1.6px]">
-                            <option className="border-[1px]" value="Course">Select Course</option>
-                            <option className="py-[8px]" value="Html">Html Course</option>
-                            <option className="py-[8px]" value="Css">Css Course</option>
-                            <option className="py-[8px]" value="Javascript">Javascript Course</option>
+                        <select className="py-[8px] pl-[8px] rounded-[7px] border-[1.6px]">
+                            <option value="Course">Select Course</option>
+                            <option value="Html">Html Course</option>
+                            <option value="Css">Css Course</option>
+                            <option value="Javascript">Javascript Course</option>
                         </select>
                     </div>
 

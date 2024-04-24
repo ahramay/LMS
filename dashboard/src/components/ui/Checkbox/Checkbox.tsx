@@ -141,7 +141,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref) => {
             <input
                 ref={ref}
                 className={checkBoxClass}
-                type="checkbox"
+                type="radio"
                 disabled={disabled}
                 readOnly={readOnly}
                 name={name}
