@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Input from '@/components/ui/Input'
-import appConfig from '@/configs/app.config'
 import Container from '@/components/shared/Container'
+import Tag from '@/components/ui/Tag'
+import { useMemo } from 'react'
 import Table from '@/components/ui/Table'
 import Pagination from '@/components/ui/Pagination'
 import Select from '@/components/ui/Select'
@@ -15,11 +15,14 @@ import type {
 import { rankItem } from '@tanstack/match-sorter-utils'
 import AdaptableCard from '@/components/shared/AdaptableCard'
 import GetUserRole from '@/components/shared/GetUserRole'
+import type { CellContext } from '@/components/shared/DataTable'
 import Button from '@/components/ui/Button'
 import Dialog from '@/components/ui/Dialog'
-import { useAppDispatch, useAppSelector, getAllUsers } from '@/store'
-
-import UserTableViewtypp from '@/@types/UserTableViewtype'
+import type { MouseEvent } from 'react'
+import { HiOutlineCog, HiOutlinePencil } from 'react-icons/hi'
+import { MdDone, MdDelete } from 'react-icons/md'
+import Dropdown from '@/components/ui/Dropdown'
+import { BsThreeDotsVertical } from 'react-icons/bs'
 
 import {
     useReactTable,
@@ -33,13 +36,13 @@ import {
     flexRender,
 } from '@tanstack/react-table'
 
-interface ViewUserTableProps {
-    title: string
-    columns: ColumnDef<UserTableViewtypp>[]
-    tableData: Array<Object>
-    dialogIsOpen: boolean
-    onDialogClose: any
-    onDialogOk: any
+type Person = {
+    id: number
+    mail: string
+    userName: string
+    signUpDate: string
+    userStatus: any
+    actions: any
 }
 
 type Option = {
@@ -91,20 +94,26 @@ function DebouncedInput({
     )
 }
 
-const ViewUserTable: React.FC<ViewUserTableProps> = ({
-    title,
-    columns,
-    tableData,
-    dialogIsOpen,
-    onDialogClose,
-    onDialogOk,
-}) => {
+const CourseTasks: React.FC = () => {
     const [status, setStatus] = useState<string>('all')
     const [loading, setLoading] = useState<boolean>(false)
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [globalFilter, setGlobalFilter] = useState('')
-    const userData = useAppSelector((state) => state.userListSlice)
-    const dispatch = useAppDispatch()
+    const [dialogIsOpen, setIsOpen] = useState(false)
+
+    const openDialog = () => {
+        setIsOpen(true)
+    }
+
+    const onDialogClose = (e: MouseEvent) => {
+        console.log('onDialogClose', e)
+        setIsOpen(false)
+    }
+
+    const onDialogOk = (e: MouseEvent) => {
+        console.log('onDialogOk', e)
+        setIsOpen(false)
+    }
 
     const { Tr, Th, Td, THead, TBody, Sorter } = Table
 
@@ -116,37 +125,132 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
         { value: 50, label: '50 / page' },
     ]
 
-    const totalData = userData.usersData.length
+    const tableData = (): Person[] => {
+        const arr = []
+        for (let i = 0; i < 3; i++) {
+            arr.push({
+                id: i,
+                userName: `userName${i}`,
+                mail: `mail${i}`,
+                signUpDate: `Sign Up Date ${i}`,
+                userStatus: i % 2 === 0 ? true : false,
+                actions: i,
+            })
+        }
+        return arr
+    }
+    const totalData = tableData().length
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+        // Rank the item
         const itemRank = rankItem(row.getValue(columnId), value)
-
+        // Store the itemRank info
         addMeta({
             itemRank,
         })
-
+        // Return if the item should be filtered in/out
         return itemRank.passed
     }
 
-    // const allUsers = async () => {
-    //     const baseUrl = `${appConfig.baseUrl}/${appConfig.apiPrefix}`
-    //     const res = await axios.get(`${baseUrl}/auth/users`);
-    //     console.log(res);
-    //     setUserData(res.data.users);
-    // }
+    const handleAction = (cellProps: CellContext<Person, unknown>) => {
+        console.log('Action clicked', cellProps)
+    }
 
-    useEffect(() => {
-        //   allUsers();
-        dispatch(getAllUsers())
-    }, [])
+    const columns = useMemo<ColumnDef<Person>[]>(
+        () => [
+            {
+                header: 'Tasks',
+                accessorKey: 'task',
+            },
+            // {
+            //     header: 'Location',
+            //     accessorKey: 'location',
+            // },
+            // {
+            //     header: 'Date',
+            //     accessorKey: 'date',
+            // },
+            // {
+            //     header: 'Start Time',
+            //     accessorKey: 'startTime',
+            // },
+            // {
+            //     header: 'End Time',
+            //     accessorKey: 'endTime',
+            // },
+            // {
+            //     header: 'Total Student',
+            //     accessorKey: 'totalStudent',
+            // },
+            // {
+            //     header: 'Type',
+            //     accessorKey: 'type',
+            // },
+            {
+                header: 'Actions',
+                id: 'action',
+                cell: (props) => {
+                    const Toggle = (
+                        <span className="cursor-pointer rotate-180">
+                            <BsThreeDotsVertical size={20} />
+                        </span>
+                    )
+                    return (
+                        <>
+                            <Dropdown
+                                placement="bottom-center"
+                                renderTitle={Toggle}
+                            >
+                                <Dropdown.Item eventKey="a">
+                                    <Button
+                                        size="xs"
+                                        onClick={() => handleAction(props)}
+                                        className="capitalize mr-2 mb-2 w-full p-0"
+                                        variant="solid"
+                                        color="blue-600"
+                                        icon={<HiOutlinePencil size={15} />}
+                                    >
+                                        <span>Edit</span>
+                                    </Button>
+                                </Dropdown.Item>
+                                <Dropdown.Item eventKey="b">
+                                    <Button
+                                        size="xs"
+                                        onClick={() => {
+                                            handleAction(props)
+                                            openDialog()
+                                        }}
+                                        className="mr-2 mb-2 capitalize w-full"
+                                        icon={<MdDelete size={15} />}
+                                        variant="solid"
+                                        color="red-600"
+                                    >
+                                        <span>Delete</span>
+                                    </Button>
+                                </Dropdown.Item>
+                                <Dropdown.Item eventKey="c">
+                                    <Button
+                                        size="xs"
+                                        onClick={() => handleAction(props)}
+                                        className="capitalize mr-2 mb-2 w-full"
+                                        variant="solid"
+                                        color="green-600"
+                                        icon={<MdDone />}
+                                    >
+                                        <span>approval</span>
+                                    </Button>
+                                </Dropdown.Item>
+                            </Dropdown>
+                        </>
+                    )
+                },
+            },
+        ],
+        []
+    )
 
-    const [data, setData] = useState(userData.usersData)
-    console.log( "?>>>>>>>>>>>>>>>>>>>>>>>",userData)
-    useEffect(() => {
-        setData(userData.usersData)
-    }, [userData.usersData.length])
-
+    const [data] = useState(() => tableData())
     const table = useReactTable({
         data,
         columns,
@@ -218,11 +322,7 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
                     </Dialog>
                 </>
                 <>
-                    <div className="flex items-center gap-4">
-                        <h2 className="inline dark:text-white">{title}</h2>
-                        <GetUserRole />
-                    </div>
-                    <div className="flex items-center justify-between my-4">
+                     <div className="flex items-center justify-between  bg-[#F5F5F5]"> {/* my-4 */}
                         <div style={{ minWidth: 130 }}>
                             <Select<Option>
                                 size="sm"
@@ -241,11 +341,10 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
                         <DebouncedInput
                             value={globalFilter ?? ''}
                             className="p-2 font-lg shadow border border-block"
-                            placeholder="Search Editor..."
+                            placeholder="Search User..."
                             onChange={(value) => setGlobalFilter(String(value))}
                         />
                     </div>
-                    
                     <Table>
                         <THead>
                             {table.getHeaderGroups().map((headerGroup) => (
@@ -316,15 +415,24 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
                                                 >
                                                     {cell?.column?.columnDef
                                                         .accessorKey ===
-                                                    'userStatus'
-                                                        ? row.original
-                                                              .userStatus
-                                                        : flexRender(
-                                                              cell.column
-                                                                  .columnDef
-                                                                  .cell,
-                                                              cell.getContext()
-                                                          )}
+                                                    'userStatus' ? (
+                                                        row.original
+                                                            .userStatus ? (
+                                                            <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
+                                                                Pending
+                                                            </Tag>
+                                                        ) : (
+                                                            <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
+                                                                approved
+                                                            </Tag>
+                                                        )
+                                                    ) : (
+                                                        flexRender(
+                                                            cell.column
+                                                                .columnDef.cell,
+                                                            cell.getContext()
+                                                        )
+                                                    )}
                                                 </Td>
                                             )
                                         })}
@@ -333,10 +441,7 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
                             })}
                         </TBody>
                     </Table>
-                    
-
-                    {/* <h1>{userData[1].firstName}</h1> */}
-                    <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center justify-between mt-4  pb-[10px]">
                         <Pagination
                             pageSize={table.getState().pagination.pageSize}
                             currentPage={
@@ -352,4 +457,4 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
     )
 }
 
-export default ViewUserTable
+export default CourseTasks

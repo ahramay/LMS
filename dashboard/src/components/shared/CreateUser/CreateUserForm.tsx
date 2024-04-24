@@ -196,10 +196,10 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
                     accessToken
                 )
                 console.log(response.msg);
-                if(response.msg === "user craeted successfully!"){
+                if(response.msg === "user created successfully!"){
                     toast.push(
                         <Notification
-                            title={` user craeted successfully! `}
+                            title={` user created successfully! `}
                             type="success"
                         />,
                         {
@@ -458,3 +458,17 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
 }
 
 export default CreateUserForm
+
+
+
+
+
+
+
+
+
+
+
+
+
+

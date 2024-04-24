@@ -46,16 +46,16 @@ const ViewNormalUser = () => {
                 accessorKey: 'userName',
             },
             {
-                header: 'Email',
-                accessorKey: 'email',
-            },
-            {
                 header: 'First Name',
                 accessorKey: 'firstName',
             },
             {
                 header: 'Last Name',
                 accessorKey: 'lastName',
+            },
+            {
+                header: 'Email',
+                accessorKey: 'email',
             },
             {
                 header: 'Role',
