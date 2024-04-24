@@ -12,6 +12,8 @@ import { HiOutlinePencil } from 'react-icons/hi'
 import { MdDone, MdDelete } from 'react-icons/md'
 import UserTableViewtypp from "@/@types/UserTableViewtype"
 import Dialog from '@/components/ui/Dialog'
+import { HiOutlineEye, HiOutlineTrash } from "react-icons/hi"
+import { Tooltip } from "@/components/ui"
 
 const ViewNormalUser = () => {
 
@@ -31,8 +33,8 @@ const ViewNormalUser = () => {
         console.log('onDialogOk', e)
         setIsOpen(false)
     }
-    
-   
+
+
     const handleAction = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
         console.log('Action clicked', cellProps)
 
@@ -40,7 +42,7 @@ const ViewNormalUser = () => {
 
     const columns = useMemo<ColumnDef<UserTableViewtypp>[]>(
         () => [
-        
+
             {
                 header: 'User Name',
                 accessorKey: 'userName',
@@ -61,113 +63,135 @@ const ViewNormalUser = () => {
                 header: 'Role',
                 accessorKey: 'role',
             },
-          
+
             {
                 header: 'Actions',
                 id: 'action',
-                cell: (props) => {
-                    const Toggle = (
-                        <span className='cursor-pointer rotate-180'>
-                            <BsThreeDotsVertical size={20}/>
-                        </span>
-                    )
-                    return (
-                        <>
-                            <Dropdown placement="bottom-end" renderTitle={Toggle}>
-                                <Dropdown.Item eventKey="a" >
-                                    <Button
-                                        size="xs"
-                                        onClick={() => handleAction(props)}
-                                        className="capitalize mr-2 mb-2 w-full p-0"
-                                        variant="solid"
-                                        color="blue-600"
-                                        icon={<HiOutlinePencil size={15} />}
+                cell: (props) => (
+                    <span className='cursor-pointer rotate-180'>
+                        <Tooltip title="View">
+                            <span
+                                className={`cursor-pointer p-2`}
+                            // onClick={onView}
+                            >
+                                <HiOutlineEye />
+                            </span>
+                        </Tooltip>
+                        <Tooltip title="Edit">
+                            <span
+                                className={`cursor-pointer p-2`}
+                            // onClick={onView}
+                            >
+                                <HiOutlinePencil/>
+                            </span>
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                            <span
+                                className="cursor-pointer p-2 hover:text-red-500"
+                            // onClick={onDelete}
+                            >
+                                <HiOutlineTrash />
+                            </span>
+                        </Tooltip>
+                    </span>
 
-                                    >
-                                        <span>Edit</span>
-                                    </Button>
-                                </Dropdown.Item>
-                                <Dropdown.Item eventKey="b">
-                                    <Button
-                                        size="xs"
-                                        onClick={() => {
-                                            handleAction(props)
-                                            openDialog()
-                                        }}
-                                        className="mr-2 mb-2 capitalize w-full"
-                                        icon={<MdDelete size={15} />}
-                                        variant="solid"
-                                        color="red-600"
-                                    >
-                                        <span>Delete</span>
-                                    </Button>
-                                </Dropdown.Item>
-                                <Dropdown.Item eventKey="c">
-                                    <Button
-                                        size="xs"
-                                        onClick={() => handleAction(props)}
-                                        className="capitalize mr-2 mb-2 w-full"
-                                        variant="solid"
-                                        color="green-600"
-                                        icon={<MdDone />}
-                                    >
-                                        <span>approval</span>
-                                    </Button>
-                                </Dropdown.Item>
-                            </Dropdown>
-                        </>
-                    )
-                },
+                    // return (
+                    // <>
+                    //     <Dropdown placement="bottom-end" renderTitle={Toggle}>
+                    //         <Dropdown.Item eventKey="a" >
+                    //             <Button
+                    //                 size="xs"
+                    //                 onClick={() => handleAction(props)}
+                    //                 className="capitalize mr-2 mb-2 w-full p-0"
+                    //                 variant="solid"
+                    //                 color="blue-600"
+                    //                 icon={<HiOutlinePencil size={15} />}
+
+                    //             >
+                    //                 <span>Edit</span>
+                    //             </Button>
+                    //         </Dropdown.Item>
+                    //         <Dropdown.Item eventKey="b">
+                    //             <Button
+                    //                 size="xs"
+                    //                 onClick={() => {
+                    //                     handleAction(props)
+                    //                     openDialog()
+                    //                 }}
+                    //                 className="mr-2 mb-2 capitalize w-full"
+                    //                 icon={<MdDelete size={15} />}
+                    //                 variant="solid"
+                    //                 color="red-600"
+                    //             >
+                    //                 <span>Delete</span>
+                    //             </Button>
+                    //         </Dropdown.Item>
+                    //         <Dropdown.Item eventKey="c">
+                    //             <Button
+                    //                 size="xs"
+                    //                 onClick={() => handleAction(props)}
+                    //                 className="capitalize mr-2 mb-2 w-full"
+                    //                 variant="solid"
+                    //                 color="green-600"
+                    //                 icon={<MdDone />}
+                    //             >
+                    //                 <span>approval</span>
+                    //             </Button>
+                    //         </Dropdown.Item>
+                    //     </Dropdown>
+                    // </>
+                    // )
+                )
             },
         ],
         []
     )
 
-    const tableData=[
+    const tableData = [
         {
             'editorId': '1',
-            'userName':'userName 1',
+            'userName': 'userName 1',
             'editormail': 'mail 1',
             'firstName': 'First Name 1',
             'lastName': 'Last Name 1',
             'signUpDate': 'Sign Up Date 1',
-            'userStatus':true ,
+            'userStatus': true,
             'actions': '1',
         },
         {
             'editorId': '2',
-            'userName':'userName 2',
+            'userName': 'userName 2',
             'editormail': 'mail 2',
             'firstName': 'First Name 2',
             'lastName': 'Last Name 2 ',
             'signUpDate': 'Sign Up Date 2',
-            'userStatus':false ,
+            'userStatus': false,
             'actions': '1',
         },
         {
             'editorId': '3',
-            'userName':'userName 3',
+            'userName': 'userName 3',
             'editormail': 'mail 3',
             'firstName': 'First Name 3',
             'lastName': 'Last Name 3',
             'signUpDate': 'Sign Up Date 3',
-            'userStatus':false,
+            'userStatus': false,
             'actions': '1',
         },
         {
             'editorId': '4',
-            'userName':'userName 4',
+            'userName': 'userName 4',
             'editormail': 'mail 4',
             'firstName': 'First Name 4',
             'lastName': 'Last Name 4',
             'signUpDate': 'Sign Up Date 4',
-            'userStatus':true ,
+            'userStatus': true,
             'actions': '1',
         },
     ]
-  return (
-    <div>
-        <>
+    return (
+        <div>
+            <>
                 <Dialog
                     isOpen={dialogIsOpen}
                     bodyOpenClassName="overflow-hidden"
@@ -197,9 +221,9 @@ const ViewNormalUser = () => {
                     </div>
                 </Dialog>
             </>
-        <ViewUserTable showHeader={true}  title='Users' columns={columns}  tableData={tableData}  />
-    </div>
-  )
+            <ViewUserTable showHeader={true} title='Users' columns={columns} tableData={tableData} />
+        </div>
+    )
 }
 
 export default ViewNormalUser
