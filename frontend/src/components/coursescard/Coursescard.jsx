@@ -31,7 +31,7 @@ const Coursescard = () => {
   function getCourseDataPagination(){
     setLoading(true);
 
-        fetchDataFromApi(`api/course/all?page=${currentPage}`).then(
+        fetchDataFromApi(`/api/course/all?page=${currentPage}`).then(
           (res)=>{
             setcourses(res?.data)
             setLoading(false)

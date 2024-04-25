@@ -1,18 +1,17 @@
 import { Request, Response } from "express";
 import CartItem from "../../models/Cart/cartItemModel";
 import Order from "../../models/Order/OrderModel";
-const userTestId = "6593beaac2d7ee67a75fb248";
 
 export const checkoutDetail = async (req: Request, res: Response) => {
-  // const { userId } = req;
-  const userId = userTestId;
-
+  const userId = String(req.user._id);
   // Find the user's cart items
-  const cartItems = await CartItem.find({ user: userId }).populate('course');
+  const cartItems = await CartItem.find({ user: userId }).populate("course");
 
   // Check if the cart is empty
   if (cartItems.length === 0) {
-    return res.status(400).json({ error: 'Cart is empty. Add items to the cart before checkout.' });
+    return res
+      .status(400)
+      .json({ error: "Cart is empty. Add items to the cart before checkout." });
   }
 
   // Calculate subtotal and total amount, handling cases where price is not available
@@ -30,16 +29,16 @@ export const checkoutDetail = async (req: Request, res: Response) => {
   });
 };
 
-
 export const proceedOrder = async (req: Request, res: Response) => {
-  // const { userId } = req;
-  const userId = userTestId;
+  const userId = String(req.user._id);
 
   // Find the user's cart items
-  const cartItems = await CartItem.find({ user: userId }).populate('course');
+  const cartItems = await CartItem.find({ user: userId }).populate("course");
 
   if (cartItems.length === 0) {
-    return res.status(400).json({ error: 'Cart is empty. Add items to the cart before checkout.' });
+    return res
+      .status(400)
+      .json({ error: "Cart is empty. Add items to the cart before checkout." });
   }
 
   // Calculate total amount, handling cases where price is not available
@@ -56,7 +55,7 @@ export const proceedOrder = async (req: Request, res: Response) => {
       quantity: item.quantity,
     })),
     totalAmount,
-    paymentStatus: 'Pending',
+    paymentStatus: "Pending",
   });
 
   await order.save();
@@ -64,5 +63,5 @@ export const proceedOrder = async (req: Request, res: Response) => {
   // Clear the user's cart after creating the order
   await CartItem.deleteMany({ user: userId });
 
-  res.json({ order, message: 'Checkout successful.' });
+  res.json({ order, message: "Checkout successful." });
 };

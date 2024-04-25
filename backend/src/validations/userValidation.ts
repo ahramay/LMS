@@ -51,8 +51,8 @@ export const loginSchema = yup.object().shape({
 export const createUserSchema = yup.object().shape({
   email: yup.string().email().required(),
   userName: yup.string().required().min(3),
-  firstName: yup.string().required().min(3),
-  lastName: yup.string().required().min(3),
+  firstName: yup.string().required().min(2),
+  lastName: yup.string().required().min(1),
   role: yup.string().required(),
   password: yup.string().required(),
   profilePic: yup.string().optional(),

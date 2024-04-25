@@ -1,7 +1,4 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { useRef } from "react";
-import { newsData } from "../constant/news";
 import Singlecourseheroimg from "../assets/singlecourse.png";
 import SingleNewsTemplate from "../components/newspage/SingleNewsTemplate";
 import { useParams } from "react-router-dom";
@@ -14,31 +11,6 @@ const SingleNews = () => {
   const query = useParams();
 
   const { data, loading } = useFetch(`/api/articles/${query.id}`);
-
-
-
-  //  const [isSticky, setSticky] = useState(false);
-  //  const footerRef = useRef(null);
-
-  // const handleScroll = () => {
-  // const offset = window.scrollY;
-  // console.log(offset , "offset");
-  // const footerOffset = footerRef.current ? footerRef.current.offsetTop : 0;
-  // console.log(footerOffset);
-
-  // if (offset > footerOffset) {
-  //     setSticky(true);
-  //   } else {
-  //     setSticky(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => {
-  //     window.removeEventListener('scroll', handleScroll);
-  //   };
-  // }, []);
 
   return (
     <>
@@ -101,10 +73,7 @@ const SingleNews = () => {
               {data && <SingleNewsTemplate data={data} />}
             </div>
             <div className="w-full lg:w-2/6">
-              {/* <div ref={footerRef} className={`sidebar ${isSticky ? 'sticky top-0' : ''}`}> */}
-              {data && <NewsSidebar />}
-
-              {/* </div> */}
+              {data && <NewsSidebar blogId={query.id} />}
             </div>
           </div>
           <div className="px-5 pb-10 lg:pb-10 lg:px-20">

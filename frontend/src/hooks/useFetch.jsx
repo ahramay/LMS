@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import fetchDataFromApi from "../utils/api";
 import { useSelector } from "react-redux";
 
-
-
 const useFetch =(url)=>{
     const[loading,setLoading]=useState(null);
     const[error,setError]=useState(null);

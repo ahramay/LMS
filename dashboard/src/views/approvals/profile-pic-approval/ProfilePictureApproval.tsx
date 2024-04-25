@@ -69,7 +69,7 @@ const ProfilePictureApproval:React.FC<ProfilePictureApprovalProps> = () => {
             },
             {
                 header: 'Profile Picture',
-                accessorKey: 'profilePic',
+                accessorKey: 'profilePicture',
             },
             {
                 header: 'User Name',

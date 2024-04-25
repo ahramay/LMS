@@ -13,6 +13,7 @@ import {
   updateUser,
   createUser,
   getAllUsers,
+  deleteUserById,
 } from "../../controllers/authControllers";
 import { handleValidationErrors } from "../../validations/validationErrorhandler";
 import {
@@ -21,6 +22,7 @@ import {
   registerSchema,
 } from "../../validations/userValidation";
 import { storeFileInMemory } from "../../helpers/filehelper";
+import { authMiddleware } from "../../middlewares/authMiddleware";
 
 const router = express.Router();
 
@@ -28,7 +30,8 @@ const router = express.Router();
 //todo add middleware for check user is valid role or not
 router.post("/create",storeFileInMemory.single("profilePic"), handleValidationErrors(createUserSchema), createUser);
 router.post("/register", handleValidationErrors(registerSchema), registerUser);
-router.patch("/update", handleValidationErrors(registerSchema), updateUser);
+router.patch("/update/:userId",authMiddleware, storeFileInMemory.single("profilePic"), updateUser);
+router.delete("/delete/:userId",authMiddleware, deleteUserById);
 
 router.get("/users", getAllUsers);
 // Verify email route

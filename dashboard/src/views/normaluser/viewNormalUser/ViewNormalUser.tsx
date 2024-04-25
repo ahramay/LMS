@@ -14,10 +14,12 @@ import UserTableViewtypp from "@/@types/UserTableViewtype"
 import Dialog from '@/components/ui/Dialog'
 import { HiOutlineEye, HiOutlineTrash } from "react-icons/hi"
 import { Tooltip } from "@/components/ui"
+import { useNavigate } from 'react-router-dom'
 
 const ViewNormalUser = () => {
 
     const [dialogIsOpen, setIsOpen] = useState<boolean>(false)
+    const navigate = useNavigate()
 
     const openDialog = () => {
         setIsOpen(true)
@@ -36,8 +38,13 @@ const ViewNormalUser = () => {
 
 
     const handleAction = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
-        console.log('Action clicked', cellProps)
+        const userData= cellProps?.row?.original || null
+        const userId= cellProps?.row?.original?._id || null
+        if (userData && userId){
+            // navigate(`/create-user?userId=${userId}`);
+            navigate(`/user/edit/?userId=${userId}`);
 
+        }
     }
 
     const columns = useMemo<ColumnDef<UserTableViewtypp>[]>(
@@ -73,14 +80,17 @@ const ViewNormalUser = () => {
                             <span
                                 className={`cursor-pointer p-2 hover:text-orange-500`}
                             >
-                                <HiOutlineEye />
+                                <HiOutlineEye onClick={() => handleAction(props)}/>
                             </span>
                         </Tooltip>
                         <Tooltip title="Edit">
                             <span
                                 className={`cursor-pointer p-2 hover:text-blue-400`}
                             >
-                                <HiOutlinePencil/>
+                                <HiOutlinePencil   onClick={() => {
+                                            handleAction(props)
+                                            openDialog()
+                                        }}/>
                             </span>
                         </Tooltip>
                         <Tooltip title="Delete">

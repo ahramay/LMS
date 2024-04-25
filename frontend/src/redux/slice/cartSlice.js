@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import appConfig from '../../config/appConfig';
 
-const API_BASE_URL = 'https://dev.hsma.org';
+const API_BASE_URL =appConfig.baseUrl
+
 
 // Fetch Cart Items from API
 export const fetchCartItems = createAsyncThunk('cart/fetchCartItems', async () => {
-  const response = await axios.get(`/api/cart/items`);
+  const response = await axios.get(`${API_BASE_URL}/api/cart/items`);
   return response.data;
 });
 

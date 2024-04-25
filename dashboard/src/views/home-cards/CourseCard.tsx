@@ -15,11 +15,13 @@ const CourseCard = (props: IProps) => {
     const navigation = useNavigate()
     const { data } = props
     const { user } = useAppSelector((state) => state.auth)
-    const dispatch = useAppDispatch()
+    const isCreatedByMe = user?._id === data?.createdBy?._id
+    const dispatch = useAppDispatch() 
     const handleCardClick = () => {
         navigation(`/course/${data._id}`)
         dispatch(setCourse({ ...data }))
     }
+
     const onCourseEdit = (e: any) => {
         e.stopPropagation()
         dispatch(setCourse({ ...data }))
@@ -67,7 +69,7 @@ const CourseCard = (props: IProps) => {
                             </h6>
                         </div>
                         <hr />
-                        {data.isCreatedByMe && (
+                        {isCreatedByMe && (
                             <Tooltip title="Edit">
                                 <Button
                                     shape="circle"

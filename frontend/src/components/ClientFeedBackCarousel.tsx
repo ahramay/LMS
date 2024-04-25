@@ -110,6 +110,7 @@ const ClientFeedBackCarousel: React.FC = () => {
               name={feedback.name}
               position={feedback.position}
               feedback={feedback.feedback}
+              homePage={true}
             /> 
           </div>
         ))}

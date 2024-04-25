@@ -1,9 +1,11 @@
 import axios from "axios";
+import appConfig from "../config/appConfig";
 
 
-const BASE_URL="http://localhost:5151"
 
 const fetchDataFromApi = async(url,token)=>{
+
+    const BASE_URL = appConfig.baseUrl
 
     const headers = {
         Authorization: token,

@@ -5,19 +5,22 @@ import useFetch from "../../hooks/useFetch";
 import Skeleton from "react-loading-skeleton";
 import { useNavigate, useNavigation } from "react-router-dom";
 
-const NewsSidebar = () => {
-  const { data, loading } = useFetch('/api/categories');
-
-
-
+const NewsSidebar = ({blogId}) => {
+  const { data, loading } = useFetch("/api/categories");
+  const { data:blogData, loading:lodingState } = useFetch(`/api/articles/${blogId}/others`);
+ 
+    
+    
   return (
     <>
       <div className="flex p-5 cursor-pointer flex-col border rounded-md justify-start mb-10 w-full">
         <h2 className="text-xl font-bold text-black mb-2">Latest Post</h2>
         <hr className="w-full text-light border-t-1 " />
-        {newsData.map((item) => (
-          <LatestNews data={item} key={item?.title} />
-        ))}
+        {
+          blogData?.popularArticle && blogData?.popularArticle?.map((item) => (
+            <LatestNews data={item} key={item?._id} />
+          ))
+        }
       </div>
       <div className="flex p-5  flex-col border rounded-md mb-10 justify-start w-full">
         <h2 className="text-xl font-bold text-black mb-2">Categories</h2>
@@ -28,7 +31,7 @@ const NewsSidebar = () => {
               <Skeleton count={2} />
             </li>
           ) : (
-            !!data && 
+            !!data &&
             data?.map((item) => (
               <li
                 key={item?._id}

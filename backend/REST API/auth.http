@@ -25,15 +25,49 @@ Content-Type: application/json
     "password":"password" 
 }
 
-
-# Google Register
+# create user
 ###
-POST {{host}}/api/auth/google-register
+POST {{host}}/api/auth/create
 Content-Type: application/json
 
 {
     "name":"Testing 101",
     "email":"test10@gmail.com"
+}
+# updated user
+###
+PATCH {{host}}/api/auth/update/:userId
+Content-Type: multipart/formdata
+
+const formdata = new FormData();
+formdata.append("profilePic", fileInput.files[0], "/C:/Users/ADMIN/Pictures/2021-01-12T17-46-42.299Z-pexels-lisa-fotios-1279330.jpg");
+formdata.append("firstName", "ali");
+formdata.append("lastName", "ahmed");
+formdata.append("userName", "alidev23");
+formdata.append("role", "manager");
+
+const requestOptions = {
+  method: "PATCH",
+  headers: myHeaders,
+  body: formdata,
+  redirect: "follow"
+};
+
+response: {
+    "status": true,
+    "msg": "user updated successfully!",
+    "user": {
+        "_id": "661d770970b6e0bc65c84a01",
+        "userName": "alidev23",
+        "email": "ali3@gmail.com",
+        "firstName": "ali",
+        "lastName": "ahmed",
+        "profilePic": "",
+        "is_verified": true,
+        "role": "manager",
+        "createdAt": "2024-04-15T18:50:49.532Z",
+        "updatedAt": "2024-04-22T18:03:31.331Z"
+    }
 }
 
 

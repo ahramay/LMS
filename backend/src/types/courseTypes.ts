@@ -15,6 +15,7 @@ export interface ICourse extends Document {
   videoUrl: string;
   objectivesTitle: string;
   courseOverview: string;
+  isCreatedByMe: boolean;
   createdBy: IUser;
   feedback: IFeedback[];
 }

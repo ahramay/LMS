@@ -26,7 +26,10 @@ import { CreateUser, User } from "../../models/User/user.model";
 import { IUser } from "../../types/userTypes";
 import { getCourseCountByUser } from "../../services";
 import { Stream } from "stream";
-import { uploadStreamToS3 } from "../../config/awsConfig";
+import { findAndDelteS3File, uploadStreamToS3 } from "../../config/awsConfig";
+import path from "path";
+import { allroles } from "../../config/courseContant";
+import { isValidObjectId } from "mongoose";
 
 // Load environment variables from a .env file
 const JWT_SECRET = process.env.JWT_SECRET || "";
@@ -77,8 +80,14 @@ export const registerUser = async (req: Request, res: Response) => {
 };
 export const createUser = async (req: Request, res: Response) => {
   const { body, file } = req;
-  const { email, userName, password } = body;
+  const { email, userName, role, password } = body;
   try {
+    if (!allroles.includes(role.toLowerCase())) {
+      return res.status(400).json({
+        status: false,
+        message: "Invalid user role",
+      });
+    }
     // Check if the email already exist
     const existingUser = await CreateUser.findOne({
       $and: [{ email: email }, { userName: userName }],
@@ -88,14 +97,14 @@ export const createUser = async (req: Request, res: Response) => {
         .status(409)
         .json({ status: false, msg: "Email or username is already exist" });
     }
-    let fileUrl = "";
+    let profilePic = "";
     if (file) {
       const fileBuffer = file.buffer;
       const fileStream = new Stream.PassThrough();
       fileStream.end(fileBuffer);
       const fileName = file.originalname;
       const contentType = file.mimetype;
-      fileUrl = await uploadStreamToS3(
+      profilePic = await uploadStreamToS3(
         fileStream,
         "auth",
         fileName,
@@ -109,22 +118,22 @@ export const createUser = async (req: Request, res: Response) => {
     // Save the user with the verification token
     const hashedPassword = await bcrypt.hash(password, 10);
     Object.assign(body, {
-      profilePic: fileUrl,
+      profilePic,
       password: hashedPassword,
       verification_token: token,
       verification_token_expires: tokenExpireIn,
     });
-
+    // todo not select password in response
     const user = await CreateUser.create(req.body);
-    const userWithoutPassword = user.toObject({
+    const userlocal = user.toObject({
       getters: true,
       virtuals: false,
     });
-    
+
     res.json({
       status: true,
       msg: "user craeted successfully!",
-      userWithoutPassword,
+      user: userlocal,
     });
   } catch (err: any) {
     console.error("user not registered error : ", err);
@@ -132,25 +141,81 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteUserById = async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  console.log("userId", userId, req.user.role);
+  // todo delete the profile pic from s3
+  
+  // if (req.user.role !== "student") {
+  //   return res.status(401).json({ status: false, msg: "you are not authorized to perform this action" });
+  // }
+  if (!isValidObjectId(String(userId))) {
+    res.status(400).json({ message: "User id is not valid" });
+  }
+  if (!userId) {
+    return res.status(400).json({ status: false, msg: "userId is required" });
+  }
+
+  try {
+    const deletedUser = await CreateUser.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      return res.status(404).json({ status: false, msg: "User not found" });
+    }
+    res.status(200).json({ status: true, msg: "User deleted successfully" });
+  } catch (err: any) {
+    console.error("user not deleted error : ", err);
+    res.status(500).json({ status: false, msg: "failed to delete user" });
+  }
+};
+
 export const updateUser = async (req: Request, res: Response) => {
-  const { email, password, countryCode, phone, user_type, ...userData } =
-    req.body;
+  const { body, file } = req;
+  const { userName, firstName, lastName, role } = body;
+  const userId = req.params.userId;
+  if (!allroles.includes(role.toLowerCase())) {
+    return res.status(400).json({
+      status: false,
+      message: "Invalid user role",
+    });
+  }
   try {
     // Check if the email already exist
-    const user = await User.findOne({ email });
+    const user = await CreateUser.findById(userId).select("-password");
     if (!user) {
-      return res.status(409).json({ status: false, msg: "user not found!" });
+      return res.status(404).json({ status: false, msg: "User not found" });
     }
 
+    let profilePic = "";
+    if (file) {
+      const fileToDel = path.basename(String(user.profilePic));
+      const fileBuffer = file.buffer;
+      const fileStream = new Stream.PassThrough();
+      fileStream.end(fileBuffer);
+      const fileName = file.originalname;
+      const contentType = file.mimetype;
+      const [fileDeleted, fileUrl] = await Promise.all([
+        findAndDelteS3File(fileToDel),
+        uploadStreamToS3(fileStream, "auth", fileName, contentType),
+      ]);
+      profilePic = fileUrl;
+    }
+
+    const updatedUser = Object.assign(user, {
+      ...(userName && { userName }),
+      ...(firstName && { firstName }),
+      ...(lastName && { lastName }),
+      ...(role && { role }),
+      ...(profilePic && { profilePic }),
+    });
     await user.save();
     res.json({
       status: true,
-      // msg: "You have been registered successfully! Check your email and verify.",
-      msg: "updated user successfully!",
+      msg: "user updated successfully!",
+      user: updatedUser,
     });
   } catch (err: any) {
-    console.error("user not registered error : ", err);
-    res.status(500).json({ status: false, msg: "failed to registered user" });
+    console.error("user not updated error : ", err);
+    res.status(500).json({ status: false, msg: "failed to update user" });
   }
 };
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -170,7 +235,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
 // Login a user
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log("req.body>>>", req.body);
   try {
     // Check if the user exists
     const user = await CreateUser.findOne({
@@ -181,7 +245,6 @@ export const loginUser = async (req: Request, res: Response) => {
         .status(403)
         .json({ status: false, msg: "Invalid email or password test " });
     }
-    console.log("user", user);
     const passwordMatch = await bcrypt.compare(password, user.password || "");
     if (!passwordMatch) {
       return res.status(403).json({ status: false, msg: "Invalid password" });
@@ -200,6 +263,8 @@ export const loginUser = async (req: Request, res: Response) => {
       userName: user.userName,
       firstName: user.firstName,
       lastName: user.lastName,
+      profilePic: user.profilePic,
+      role: user.role,
     };
     res.json({
       status: true,

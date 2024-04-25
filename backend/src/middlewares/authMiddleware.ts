@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { IUser } from "../types/userTypes";
-import { User } from "../models/User/user.model";
+import { CreateUser, User } from "../models/User/user.model";
 
 const JWT_SECRET = process.env.JWT_SECRET || "";
 
@@ -28,7 +28,7 @@ export const authMiddleware = async (
   try {
 
     const decoded = jwt.verify(token, JWT_SECRET) as any;
-    const user = await User.findById(decoded.userId);
+    const user = await CreateUser.findById(decoded.userId);
     // console.log("user", user);
     if (!user || user._id.toString() !== decoded.userId) {
       return res

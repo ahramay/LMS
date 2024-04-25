@@ -194,7 +194,7 @@ const Pricing: React.FC = () => {
         </section>
 
         <section className='container pb-20 mx-auto px-10 md:px-24'>
-          <ClientFeedback />
+          <ClientFeedback  homePage={false}/>
         </section>
 
         <section className='container pb-20 mx-auto px-10 md:px-24'>

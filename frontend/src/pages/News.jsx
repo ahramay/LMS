@@ -14,6 +14,7 @@ function News() {
   const dispatch = useDispatch();
   const { blogs, loading, error } = useSelector((state) => state.blog);
 
+
   useEffect(() => {
     dispatch(fetchBlogs());
   }, [dispatch]);

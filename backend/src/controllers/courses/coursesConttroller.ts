@@ -12,13 +12,19 @@ import { Feedback } from "../../models/course/feedback.model";
 import Stripe from "stripe";
 const stripe = new Stripe("YOUR_STRIPE_API_KEY");
 
-
 export const createCourse = async (req: Request, res: Response) => {
   const { body, user, file } = req;
   const { _id, name, role, email } = user;
   const createdBy = { _id, name, role, email };
   const userId = String(_id);
-  const userTypes = ["Instructor", "Organization", "admin", "superAdmin", "manager", "company"];
+  const userTypes = [
+    "Instructor",
+    "Organization",
+    "admin",
+    "superAdmin",
+    "manager",
+    "company",
+  ];
   try {
     if (!isValidObjectId(String(req.user._id))) {
       res.status(400).json({ message: "User id is required to get courses" });
@@ -194,7 +200,7 @@ export const getCourses = async (req: Request, res: Response) => {
       res.status(400).json({ message: "User id is required to get courses" });
     }
     const userId = String(req.user._id);
-    const courses = await Course.find({ createdBy: userId })
+    const courses = await Course.find({})
       .sort({ createdAt: -1 })
       .populate(userPopulate)
       .populate(feedbackPopulate);

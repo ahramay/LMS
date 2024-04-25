@@ -141,7 +141,7 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
         dispatch(getAllUsers())
     }, [])
 
-    const [data, setData] = useState(userData.usersData)
+    const [data, setData] = useState(userData?.usersData)
     console.log( "?>>>>>>>>>>>>>>>>>>>>>>>",userData)
     useEffect(() => {
         setData(userData.usersData)
@@ -245,7 +245,6 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
                             onChange={(value) => setGlobalFilter(String(value))}
                         />
                     </div>
-                    
                     <Table>
                         <THead>
                             {table.getHeaderGroups().map((headerGroup) => (
@@ -333,8 +332,6 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
                             })}
                         </TBody>
                     </Table>
-                    
-
                     {/* <h1>{userData[1].firstName}</h1> */}
                     <div className="flex items-center justify-between mt-4">
                         <Pagination

@@ -192,4 +192,10 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/approvals/profile-pic-approval/ProfilePictureApproval')),
         authority: [],
     },
+    {
+        key :'edit.userId',
+        path :'/user/edit/',
+        component: lazy(() => import('@/views/editUser/EditUser')),
+        authority: [],
+    },
 ]

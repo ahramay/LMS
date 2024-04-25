@@ -12,11 +12,13 @@ import RelatedNewsTemplate from "./RelatedNewsTemplate";
 const RelaedNews = ({ blogId }) => {
   const { data, loading } = useFetch(`/api/articles/${blogId}/others`);
 
+  console.log(data , "this is data from related news")
+
   return (
     <>
       <div className="py-5 lg:py-10">
         <h2 className="font-bold text-3xl text-dark-blue mb-5 ">
-          Some More News For You
+          Some More News For You 
         </h2>
         <div className="grid grid-cols-1  m-auto  gap-8 md:grid-cols-4 xl:grid-cols-4">
           {!!data &&

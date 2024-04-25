@@ -1,10 +1,19 @@
 const userPopulate = {
   path: "createdBy",
-  select: "_id name user_type email",
+  select: "_id name role email",
 };
 const feedbackPopulate = {
   path: "feedback",
   select: "_id comment rating courseId",
 };
 
-export { userPopulate, feedbackPopulate };
+const allroles = [
+  "admin",
+  "instructor",
+  "manager",
+  "corporate",
+  "editor",
+  "student",
+];
+
+export { userPopulate, feedbackPopulate, allroles };

@@ -8,9 +8,13 @@ interface FeedbackItem {
   name: string;
   position: string;
   feedback: string; 
+  
+}
+interface ClientFeedbackProps {
+  homePage?:boolean
 }
 
-const ClientFeedback: React.FC = () => {
+const ClientFeedback: React.FC<ClientFeedbackProps> = ({homePage}) => {
   // Dummy data for feedback
   const feedbackData: FeedbackItem[] = [
     {
@@ -62,6 +66,7 @@ const ClientFeedback: React.FC = () => {
             name={item.name}
             position={item.position}
             feedback={item.feedback}
+            homePage={homePage}
           />
         ))}
       </div>

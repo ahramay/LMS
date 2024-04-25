@@ -5,16 +5,18 @@ interface ClientFeedbackCardProps {
   name: string;
   position: string;
   feedback: string;
+  homePage?:boolean
 }
 
 const ClientFeedbackCard: React.FC<ClientFeedbackCardProps> = ({
   avatarSrc,
   name,
   position,
-  feedback
+  feedback,
+  homePage
 }) => {
   return (
-    <div className="flex flex-col items-center gap-4 rounded-2xl shadow-lg px-8 py-6 md:gap-6 bg-light text-white mx-2">
+    <div className={`flex flex-col items-center gap-4 rounded-2xl shadow-lg px-8 py-6 md:gap-6 bg-light  mx-2 ${homePage ? 'text-white':'text-black'}`}>
       <div className="text-center lg:text-lg">
        {feedback}
       </div>

@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button'
 import { Field, Form, Formik} from 'formik'
 import {CreateEditorUserSchema} from '@/validation'
 import { LuAsterisk } from "react-icons/lu";
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import { Upload } from '@/components/ui'
@@ -20,6 +20,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { newUser } from '@/store/slices/auth/createUser'
 import { useAppDispatch } from '@/store'
 import ShowToast from '@/components/ui/Notification/ShowToast'
+import useQuery from '@/utils/hooks/useQuery'
+import { string } from 'yup'
 // import { }
 
 type FormikData = {
@@ -85,12 +87,72 @@ const readFileAsBase64 = (file: File): Promise<string | ArrayBuffer | null> => {
     })
 }
 
+type editUserType = {
+    firstName: string
+    lastName: string
+    middleName:string
+    email: string
+    userName: string
+    password: string
+    profilePic:any
+    role:Array<string | number>
+}
+
 
 const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
   const [avatarImg, setAvatarImg] = useState<string | null>(null)
   const [generatedPassword, setGeneratedPassword] = useState<string>('');
+  const [editUserData,setEditUserData]=useState<editUserType>()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+
+  const query = useQuery()
+
+  const getSingleUserDataRequest = async (
+    method: 'get',
+    url: string,
+    accessToken: string
+) => {
+    try {
+        const response = await axios({
+            method,
+            url,
+            headers: {
+                Authorization: `${accessToken}`,
+            },
+        })
+        console.log(response,"this is responce")
+        return response.data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+  const fetchuserIdParam = async ()=> {
+    const userIdParam = query.get('userId');
+    if (userIdParam) {
+       console.log(userIdParam ,"userIdParam")
+    }
+    try {
+        const rawPersistData = localStorage.getItem(PERSIST_STORE_NAME)
+            const persistData = deepParseJson(rawPersistData)
+            const accessToken = (persistData as any).auth.session.token
+            const baseUrl = `${appConfig.baseUrl}/${appConfig.apiPrefix}`
+                // const response = await getSingleUserDataRequest(
+                //     'get',
+                //     `${baseUrl}/users`,
+                //     accessToken
+                // )
+    } catch (error) {
+        
+    }
+ }
+
+  useEffect(()=>{
+    fetchuserIdParam();
+  },[])
+
 
 
   // edit user Form config
@@ -196,10 +258,10 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
                     accessToken
                 )
                 console.log(response.msg);
-                if(response.msg === "user created successfully!"){
+                if(response.msg === "user craeted successfully!"){
                     toast.push(
                         <Notification
-                            title={` user created successfully! `}
+                            title={` user craeted successfully! `}
                             type="success"
                         />,
                         {
@@ -242,12 +304,23 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
         password: generatedPassword,
     })
 
+    const editUserInitialValues = () =>({
+            firstName:  '',
+            lastName: '',
+            middleName:'',
+            email:'',
+            userName:'',
+            role:[],
+            password:''
+        }
+    )
+
     return (
         <Formik
             enableReinitialize
             initialValues={{
-                ...(selectedUser === 1
-                    ? selectedUser
+                ...(editUserData
+                    ? editUserInitialValues()
                     : courseInitialValues()),
                 profilePic: null? null :'',
             }}
@@ -353,7 +426,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
                                    
                                 />
                             </FormItem>
-                            <GeneratePassword passwordConfig={passwordConfig} sendData={handlePassword}/>
+                            {/* <GeneratePassword passwordConfig={passwordConfig} sendData={handlePassword}/> */}
                            </div>
                            <div className='flex pt-6 gap-4 flex-col sm:flex-row'>
                                 <FormItem
@@ -458,17 +531,3 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
 }
 
 export default CreateUserForm
-
-
-
-
-
-
-
-
-
-
-
-
-
-

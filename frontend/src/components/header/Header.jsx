@@ -9,8 +9,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import { logout } from "../../redux/slice/authSlice";
-
 const Header = () => {
   const [megaMenuOpen, setMegaMenuOpen] = useState(null);
   const [mobileViewOpen, setMobileViewOpen] = useState(false);
