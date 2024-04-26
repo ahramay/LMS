@@ -38,11 +38,24 @@ const ViewNormalUser = () => {
 
 
     const handleAction = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
-        const userData= cellProps?.row?.original || null
-        const userId= cellProps?.row?.original?._id || null
-        if (userData && userId){
+        const userData = cellProps?.row?.original || null
+        const userId = cellProps?.row?.original?._id || null
+        console.log("UID", userId)
+        console.log("UD", userData)
+        if (userData && userId) {
             // navigate(`/create-user?userId=${userId}`);
-            navigate(`/user/edit/?userId=${userId}`);
+            navigate(`/user/upDateProfile/?userId=${userId}`);
+
+        }
+    }
+    const handleActionP = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
+        const userData = cellProps?.row?.original || null
+        const userId = cellProps?.row?.original?._id || null
+        console.log("UID", userId)
+        console.log("UD", userData)
+        if (userData && userId) {
+            // navigate(`/create-user?userId=${userId}`);
+            navigate(`/user/profile/?userId=${userId}`, { state: userData });
 
         }
     }
@@ -80,17 +93,17 @@ const ViewNormalUser = () => {
                             <span
                                 className={`cursor-pointer p-2 hover:text-orange-500`}
                             >
-                                <HiOutlineEye onClick={() => handleAction(props)}/>
+                                <HiOutlineEye onClick={() => handleActionP(props)} />
                             </span>
                         </Tooltip>
                         <Tooltip title="Edit">
                             <span
                                 className={`cursor-pointer p-2 hover:text-blue-400`}
                             >
-                                <HiOutlinePencil   onClick={() => {
-                                            handleAction(props)
-                                            openDialog()
-                                        }}/>
+                                <HiOutlinePencil onClick={() => {
+                                    handleAction(props)
+                                    openDialog()
+                                }} />
                             </span>
                         </Tooltip>
                         <Tooltip title="Delete">

@@ -137,39 +137,6 @@ const EditUser = () => {
                         }
                     </div>
                 </div>
-                <div className="bg-sky-100 md:w-[30%] w-full h-full side-nav top-[80px] side-nav-expand overflow-y-scroll">
-                        <div>
-                            <Card
-                                header={
-                                    <span className='flex flex-col justify-center items-center gap-2'>
-                                        <Avatar size={120} shape="circle" icon={<HiOutlineUser />} />
-                                        <span className='text-black font-bold capitalizen text-xl'>User name</span>
-                                        <span className="mr-1 font-semibold  cursor-pointer ">
-                                            <Tooltip title={idUserVerified ? 'Verified' :'Unverified'}>
-                                                Status:
-                                                <span className="text-emerald-500 text-xl ps-2 r">
-                                                    <HiCheckCircle />
-                                                </span>
-                                            </Tooltip>
-                                        </span>
-                                    </span>
-                                }
-                                footer={cardFooter}
-                            >
-                                <div className=" flex flex-col  items-center">
-                                    <IconText className="text-black text-sm font-semibold py-2" icon={<HiClock className="text-lg"  />}>
-                                            In Progress
-                                    </IconText>
-                                    <IconText className="text-black text-sm font-semibold py-2" icon={<HiClock className="text-lg"  />}>
-                                            In Progress
-                                    </IconText>
-                                    <IconText className="text-black text-sm font-semibold py-2" icon={<HiClock className="text-lg"  />}>
-                                            In Progress
-                                    </IconText>
-                                </div>
-                            </Card>
-                        </div>
-                </div>
             </div>
         </Container>
     )

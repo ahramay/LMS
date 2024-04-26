@@ -194,8 +194,14 @@ export const protectedRoutes = [
     },
     {
         key :'edit.userId',
-        path :'/user/edit/',
-        component: lazy(() => import('@/views/editUser/EditUser')),
+        path :'/user/upDateProfile/',
+        component: lazy(() => import('@/views/profile/UpdateProfile')),
+        authority: [],
+    },
+    {
+        key :'view.userId',
+        path :'/user/profile/',
+        component: lazy(() => import('@/views/profile/UserProfile')),
         authority: [],
     },
 ]

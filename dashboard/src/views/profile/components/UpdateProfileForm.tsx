@@ -15,6 +15,7 @@ import appConfig from '@/configs/app.config'
 import { PERSIST_STORE_NAME } from '@/constants/app.constant'
 import deepParseJson from '@/utils/deepParseJson'
 import Avatar from '@/components/ui/Avatar'
+import { useNavigate } from 'react-router-dom'
 
 type FormikData = {
     firstName: string
@@ -79,6 +80,7 @@ const readFileAsBase64 = (file: File): Promise<string | ArrayBuffer | null> => {
 
 const UpdateProfileForm: React.FC<UpdateProfileForm> = () => {
     const [avatarImg, setAvatarImg] = useState<string | null>(null)
+    const navigate = useNavigate();
 
     // edit user Form config
     const selectedUser = null
@@ -139,6 +141,26 @@ const UpdateProfileForm: React.FC<UpdateProfileForm> = () => {
             const persistData = deepParseJson(rawPersistData)
             const accessToken = (persistData as any).auth.session.token
             const baseUrl = `${appConfig.baseUrl}/${appConfig.apiPrefix}`
+            const response = await makeRequest(
+                'patch',
+                `${baseUrl}/`,
+                formData,
+                accessToken
+            )
+            console.log(response.msg);
+            if(response.msg === "user userUpdated successfully!"){
+                toast.push(
+                    <Notification
+                        title={` user updated successfully! `}
+                        type="success"
+                    />,
+                    {
+                        placement: 'top-center',
+                    }
+                )
+                setSubmitting(false);
+                // navigate('')
+            }
         } catch (error) {
             toast.push(
                 <Notification

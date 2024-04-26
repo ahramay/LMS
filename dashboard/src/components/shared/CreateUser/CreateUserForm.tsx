@@ -297,7 +297,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
     const courseInitialValues = () => ({
         firstName: '',
         lastName: '',
-        middleName:'',
+        // middleName:'',
         email: '',
         userName:'',
         role:[],
@@ -307,7 +307,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
     const editUserInitialValues = () =>({
             firstName:  '',
             lastName: '',
-            middleName:'',
+            // middleName:'',
             email:'',
             userName:'',
             role:[],
@@ -351,7 +351,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
                                     placeholder="Enter First Name"
                                 />
                             </FormItem>
-                            <FormItem
+                            {/* <FormItem
                                 label="Middle Name"
                                 extra={optional}
                                 className='w-full'
@@ -362,7 +362,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
                                     component={Input}
                                     placeholder="Enter Middle Name"
                                 />
-                            </FormItem>
+                            </FormItem> */}
                             <FormItem
                                 extra={asterisk}
                                 label="Last Name"
