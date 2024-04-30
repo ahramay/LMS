@@ -146,9 +146,9 @@ export const deleteUserById = async (req: Request, res: Response) => {
   console.log("userId", userId, req.user.role);
   // todo delete the profile pic from s3
   
-  // if (req.user.role !== "student") {
-  //   return res.status(401).json({ status: false, msg: "you are not authorized to perform this action" });
-  // }
+  if (req.user.role !== "student") {
+    return res.status(401).json({ status: false, msg: "you are not authorized to perform this action" });
+  }
   if (!isValidObjectId(String(userId))) {
     res.status(400).json({ message: "User id is not valid" });
   }
@@ -172,12 +172,7 @@ export const updateUser = async (req: Request, res: Response) => {
   const { body, file } = req;
   const { userName, firstName, lastName, role } = body;
   const userId = req.params.userId;
-  if (!allroles.includes(role.toLowerCase())) {
-    return res.status(400).json({
-      status: false,
-      message: "Invalid user role",
-    });
-  }
+  
   try {
     // Check if the email already exist
     const user = await CreateUser.findById(userId).select("-password");
@@ -218,6 +213,7 @@ export const updateUser = async (req: Request, res: Response) => {
     res.status(500).json({ status: false, msg: "failed to update user" });
   }
 };
+
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     // Check if the email already exist

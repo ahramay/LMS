@@ -22,7 +22,7 @@ const ViewNormalUser = () => {
     const navigate = useNavigate()
 
     const openDialog = () => {
-        setIsOpen(true)
+        setIsOpen(true);
         console.log("Dialogopen")
     }
 
@@ -40,24 +40,31 @@ const ViewNormalUser = () => {
     const handleAction = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
         const userData = cellProps?.row?.original || null
         const userId = cellProps?.row?.original?._id || null
-        console.log("UID", userId)
+        // console.log("UID", userId)
         console.log("UD", userData)
         if (userData && userId) {
             // navigate(`/create-user?userId=${userId}`);
-            navigate(`/user/upDateProfile/?userId=${userId}`);
+            navigate(`/user/upDateProfile/?userId=${userId}`, { state: userData});
 
         }
     }
     const handleActionP = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
         const userData = cellProps?.row?.original || null
         const userId = cellProps?.row?.original?._id || null
-        console.log("UID", userId)
-        console.log("UD", userData)
+        // console.log("UID", userId)
+        // console.log("UD", userData)
         if (userData && userId) {
             // navigate(`/create-user?userId=${userId}`);
             navigate(`/user/profile/?userId=${userId}`, { state: userData });
 
         }
+    }
+    
+    const handleActionD = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
+        const userData = cellProps?.row?.original || null
+        const userId = cellProps?.row?.original?._id || null
+        console.log("UD", userData)
+      
     }
 
     const columns = useMemo<ColumnDef<UserTableViewtypp>[]>(
@@ -111,7 +118,10 @@ const ViewNormalUser = () => {
                                 className="cursor-pointer p-2 hover:text-red-600"
                             // onClick={onDelete}
                             >
-                                <HiOutlineTrash />
+                                <HiOutlineTrash  onClick={() => {
+                                        handleActionD(props)
+                                        openDialog()
+                                    }} />
                             </span>
                         </Tooltip>
                     </span>
@@ -242,7 +252,8 @@ const ViewNormalUser = () => {
                     </div>
                 </Dialog>
             </>
-            <ViewUserTable showHeader={true} title='Users' columns={columns} tableData={tableData} />
+    
+            <ViewUserTable showHeader={true} title='Users' columns={columns} tableData={tableData} dialogIsOpen={dialogIsOpen} onDialogClose={onDialogClose} onDialogOk={onDialogOk}  />
         </div>
     )
 }

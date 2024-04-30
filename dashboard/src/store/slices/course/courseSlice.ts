@@ -75,9 +75,11 @@ const courseSlice = createSlice({
             selectedCourse.videoUrl = videoUrl
             selectedCourse.isCreatedByMe = isCreatedByMe
         },
+        
         addNewCourse(state, action: PayloadAction<Course>) {
             state.allCourseList.unshift(action.payload)
         },
+
         updateCourse(state, action: PayloadAction<Course>) {
             const index = state.allCourseList.findIndex(
                 (course) => course._id === action.payload._id

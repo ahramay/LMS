@@ -54,7 +54,7 @@ const Coursescard: React.FC = () => {
 
     return (
         <>
-            <div className="grid grid-cols-1 m-auto gap-8 md:grid-cols-3 xl:grid-cols-4">
+            <div className="flex flex-wrap gap-y-[30px]">
                 {loadingAllCourses ? (
                     <>
                         {Array.from({ length: 7 }).map((_, index) => (

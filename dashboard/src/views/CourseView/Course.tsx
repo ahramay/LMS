@@ -39,9 +39,10 @@ function Course() {
                     src={localCourse?.image}
                     alt="img"
                     style={{ filter: 'contrast(0.5)' }}
+                    className=''
                 />
             </div>
-            <div className="w-full rounded-lg ">
+            <div className="w-full rounded-lg">
                 <div className="grid grid-cols-1 m-auto  gap-8 ">
                     {localCourse && <CourseDetail courseDetail={localCourse} />}
                 </div>
