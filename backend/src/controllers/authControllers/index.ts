@@ -146,7 +146,7 @@ export const deleteUserById = async (req: Request, res: Response) => {
   console.log("userId", userId, req.user.role);
   // todo delete the profile pic from s3
   
-  if (req.user.role !== "student") {
+  if (req.user.role === "student") {
     return res.status(401).json({ status: false, msg: "you are not authorized to perform this action" });
   }
   if (!isValidObjectId(String(userId))) {

@@ -9,7 +9,6 @@ import CourseFilter from "./HomeClassesInfo/CourseFilter"
 
 const Home = () => {
 
-    
 const dashboardCards = [
     {
         title: "N/A",

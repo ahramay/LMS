@@ -40,6 +40,7 @@ interface ViewUserTableProps {
     dialogIsOpen: boolean
     onDialogClose: any
     onDialogOk: any
+    setIsOpen: any
 }
 
 type Option = {
@@ -98,6 +99,7 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
     dialogIsOpen,
     onDialogClose,
     onDialogOk,
+    setIsOpen,
 }) => {
     const [status, setStatus] = useState<string>('all')
     const [loading, setLoading] = useState<boolean>(false)
@@ -135,6 +137,7 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
     //     console.log(res);
     //     setUserData(res.data.users);
     // }
+    
 
     useEffect(() => {
         //   allUsers();
@@ -142,7 +145,7 @@ const ViewUserTable: React.FC<ViewUserTableProps> = ({
     }, [])
 
     const [data, setData] = useState(userData?.usersData)
-    console.log( "?>>>>>>>>>>>>>>>>>>>>>>>",userData)
+    // console.log( "?>>>>>>>>>>>>>>>>>>>>>>>",userData)
     useEffect(() => {
         setData(userData.usersData)
     }, [userData.usersData.length])

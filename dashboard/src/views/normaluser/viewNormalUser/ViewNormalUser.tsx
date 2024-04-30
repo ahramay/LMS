@@ -5,6 +5,10 @@ import type {
 import { useMemo } from 'react'
 import type { CellContext } from '@/components/shared/DataTable'
 import ViewUserTable from '@/components/shared/viewusertable/ViewUserTable'
+import { PERSIST_STORE_NAME } from '@/constants/app.constant'
+import deepParseJson from '@/utils/deepParseJson'
+import axios from 'axios'
+import appConfig from '@/configs/app.config'
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Dropdown from '@/components/ui/Dropdown'
 import Button from '@/components/ui/Button'
@@ -13,26 +17,24 @@ import { MdDone, MdDelete } from 'react-icons/md'
 import UserTableViewtypp from "@/@types/UserTableViewtype"
 import Dialog from '@/components/ui/Dialog'
 import { HiOutlineEye, HiOutlineTrash } from "react-icons/hi"
-import { Tooltip } from "@/components/ui"
+import { Notification, Tooltip, toast } from "@/components/ui"
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 const ViewNormalUser = () => {
 
     const [dialogIsOpen, setIsOpen] = useState<boolean>(false)
+    const [usersId, setUsersId] = useState<any>('');
     const navigate = useNavigate()
+    const dispatch = useDispatch();
 
     const openDialog = () => {
         setIsOpen(true);
-        console.log("Dialogopen")
+        // console.log("Dialogopen")
     }
 
     const onDialogClose = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         console.log('onDialogClose', e)
-        setIsOpen(false)
-    }
-
-    const onDialogOk = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-        console.log('onDialogOk', e)
         setIsOpen(false)
     }
 
@@ -51,25 +53,68 @@ const ViewNormalUser = () => {
     const handleActionP = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
         const userData = cellProps?.row?.original || null
         const userId = cellProps?.row?.original?._id || null
-        // console.log("UID", userId)
-        // console.log("UD", userData)
         if (userData && userId) {
             // navigate(`/create-user?userId=${userId}`);
             navigate(`/user/profile/?userId=${userId}`, { state: userData });
 
         }
     }
+
+    const deleteReq = async(
+            method: 'delete',
+            url: string,
+            accessToken:  string,
+        )=>{
+            try {
+                const response = await axios({
+                    method,
+                    url,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `${accessToken}`,
+                    },
+                })
+                return response.data
+              } catch (error) {
+                console.log(error);
+              }
+        }
     
     const handleActionD = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
         const userData = cellProps?.row?.original || null
         const userId = cellProps?.row?.original?._id || null
-        console.log("UD", userData)
-      
+        setUsersId(userId);       
     }
+
+
+    const onDialogOk = async (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+
+        const rawPersistData = localStorage.getItem(PERSIST_STORE_NAME)
+        const persistData = deepParseJson(rawPersistData)
+        const accessToken = (persistData as any).auth.session.token
+        const baseUrl = `${appConfig.baseUrl}/${appConfig.apiPrefix}`
+        const response = await deleteReq(
+            'delete',
+            `${baseUrl}/auth/delete/${usersId}`,
+            accessToken,
+        )
+        setIsOpen(false)
+        if(response.status){
+            toast.push(
+                <Notification title='User deleted successfully' type='success'/>,
+                {
+                    placement: "top-center"
+                }
+            )
+
+            // const { firstName } = response.
+            
+        }
+    }
+
 
     const columns = useMemo<ColumnDef<UserTableViewtypp>[]>(
         () => [
-
             {
                 header: 'User Name',
                 accessorKey: 'userName',
@@ -109,7 +154,7 @@ const ViewNormalUser = () => {
                             >
                                 <HiOutlinePencil onClick={() => {
                                     handleAction(props)
-                                    openDialog()
+                                    // openDialog()
                                 }} />
                             </span>
                         </Tooltip>
@@ -223,7 +268,7 @@ const ViewNormalUser = () => {
     return (
         <div>
             <>
-                <Dialog
+                {/* <Dialog
                     isOpen={dialogIsOpen}
                     bodyOpenClassName="overflow-hidden"
                     onClose={onDialogClose}
@@ -250,10 +295,10 @@ const ViewNormalUser = () => {
                             Cancel
                         </Button>
                     </div>
-                </Dialog>
+                </Dialog> */}
             </>
     
-            <ViewUserTable showHeader={true} title='Users' columns={columns} tableData={tableData} dialogIsOpen={dialogIsOpen} onDialogClose={onDialogClose} onDialogOk={onDialogOk}  />
+            <ViewUserTable showHeader={true} title='Users' columns={columns} tableData={tableData} dialogIsOpen={dialogIsOpen} onDialogClose={onDialogClose} onDialogOk={onDialogOk} setIsOpen={setIsOpen} />
         </div>
     )
 }

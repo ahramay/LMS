@@ -17,11 +17,12 @@ import appConfig from '@/configs/app.config'
 import { PERSIST_STORE_NAME } from '@/constants/app.constant'
 import deepParseJson from '@/utils/deepParseJson'
 import { useNavigate, useParams } from 'react-router-dom'
-import { newUser } from '@/store/slices/auth/createUser'
-import { useAppDispatch } from '@/store'
+import { newCreatedUser } from '@/store/slices/auth/createUser'
+// import { useAppDispatch } from '@/store'
 import ShowToast from '@/components/ui/Notification/ShowToast'
 import useQuery from '@/utils/hooks/useQuery'
 import { string } from 'yup'
+import { useDispatch } from 'react-redux'
 // import { }
 
 type FormikData = {
@@ -104,7 +105,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
   const [generatedPassword, setGeneratedPassword] = useState<string>('');
   const [editUserData,setEditUserData]=useState<editUserType>()
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const query = useQuery()
 
@@ -121,7 +122,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
                 Authorization: `${accessToken}`,
             },
         })
-        console.log(response,"this is responce")
+        // console.log(response,"this is responce")
         return response.data
     } catch (error) {
         console.log(error)
@@ -132,7 +133,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
   const fetchuserIdParam = async ()=> {
     const userIdParam = query.get('userId');
     if (userIdParam) {
-       console.log(userIdParam ,"userIdParam")
+    //    console.log(userIdParam ,"userIdParam")
     }
     try {
         const rawPersistData = localStorage.getItem(PERSIST_STORE_NAME)
@@ -245,7 +246,7 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
     ) => {
         setSubmitting(true)
         const formData = createFormData(values);
-        console.log("formData>>>>>",formData);
+        // console.log("formData>>>>>",formData);
         try {
             const rawPersistData = localStorage.getItem(PERSIST_STORE_NAME)
             const persistData = deepParseJson(rawPersistData)
@@ -257,11 +258,12 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
                     formData,
                     accessToken
                 )
-                console.log(response.msg);
+                // console.log(response.msg);
+                // console.log("the new user created", response.user)
                 if(response.msg === "user craeted successfully!"){
                     toast.push(
                         <Notification
-                            title={` user craeted successfully! `}
+                            title={` user created successfully! `}
                             type="success"
                         />,
                         {
@@ -272,8 +274,8 @@ const CreateUserForm:React.FC<CreateUserFormProps> = ({userRoles}) => {
                     navigate('/users')
                 }
                 if(response){
-                    const { firstName, middleName, lastName, email, userName, profilePic,password, role} = response.userWithoutPassword;
-                    dispatch(newUser({
+                    const { firstName, middleName, lastName, email, userName, profilePic,password, role} = response.user;
+                    dispatch(newCreatedUser({
                         firstName,
                         middleName, 
                         lastName, 

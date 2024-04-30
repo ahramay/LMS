@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+// import { Action } from "history";
 
 export type userPayload = {
     firstName: string
@@ -26,7 +27,7 @@ const createUserSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        newUser: (state, action: PayloadAction<userPayload>)=>{
+        newCreatedUser: (state, action: PayloadAction<userPayload>)=>{
              state.firstName = action.payload.firstName;
              state.lastName = action.payload.lastName;
              state.middleName = action.payload.middleName;
@@ -35,8 +36,10 @@ const createUserSlice = createSlice({
              state.profilePic = action.payload.profilePic;
              state.role = action.payload.role;
         },
+        // deletedUser: (state, action: PayloadAction<userPayload>)=>{
+        // }
     },
 })
 
-export const { newUser } = createUserSlice.actions
+export const { newCreatedUser } = createUserSlice.actions
 export default createUserSlice.reducer
