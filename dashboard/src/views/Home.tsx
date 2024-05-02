@@ -57,15 +57,7 @@ const dashboardCards = [
 
                 <div className="flex items-center justify-between mt-[20px]">
                     <h4 className="text-[#444444] font-[600]">Filter Course</h4>
-                    <div className="flex items-center gap-[5px]">
-                        <button className="border-[1px] hover:border-[2px] py-[7px] px-[7px] rounded-[5px] hover:border-[#4f46e5] font-[600] bg-[#fff]">Send Reminder To All</button>
-                        <button className="border-[1px] hover:border-[2px] py-[7px] px-[7px] rounded-[5px] hover:border-[#4f46e5] font-[600] bg-[#fff]">Select Users & Send Reminder</button>
-                        <button className="border-[1px] hover:border-[2px] py-[7px] px-[7px] rounded-[5px] hover:border-[#4f46e5] font-[600] bg-[#fff]">Send Reminder To Company</button>
-                    </div>
-                </div>
-
-                <div className="text-end mt-[7px]">             
-                    <button className="border-[1px] hover:border-[2px] py-[7px] px-[14px] rounded-[5px] hover:border-[#4f46e5] font-[600] bg-[#fff]">Download</button>
+                 
                 </div>
 
                 
@@ -75,7 +67,7 @@ const dashboardCards = [
 
 
                     <div>
-                        <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Email:</p>
+                        <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Status:</p>
                         <select className="py-[8px] pl-[8px] rounded-[7px] border-[1.6px]">
                             <option value="Course">Select Course</option>
                             <option value="Html">Html Course</option>
