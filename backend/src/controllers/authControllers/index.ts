@@ -125,6 +125,8 @@ export const createUser = async (req: Request, res: Response) => {
     });
     // todo not select password in response
     const user = await CreateUser.create(req.body);
+    // converting a Mongoose document into a plain JavaScript object,
+    // including any getters defined in the schema, but excluding any virtuals
     const userlocal = user.toObject({
       getters: true,
       virtuals: false,
@@ -141,14 +143,73 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllUserPendingProfilePic = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const users = await CreateUser.find({ profilePicStatus: "pending" }).select(
+      "-password"
+    );
+    if (!users) {
+      res.status(400).json({ status: false, msg: "users not found" });
+    }
+    res.status(200).json({
+      status: true,
+      msg: "show all pending profilepic users",
+      pendingUsers: users,
+    });
+  } catch (error) {
+    console.error("pending profilepic users not found : ", error);
+    res.status(500).json({ status: false, msg: "failed to get pending users" });
+  }
+};
+
+// update user profile pic pending status
+export const updateUserProfilePic = async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  const { profilePicStatus } = req.body;
+  if (!isValidObjectId(String(req.user._id))) {
+    res.status(400).json({ message: "User id is not valid" });
+  }
+  if (!userId) {
+    return res.status(400).json({ status: false, msg: "userId is required" });
+  }
+  try {
+    const user = await CreateUser.findById(userId);
+    if (!user) {
+      return res.status(404).json({ status: false, msg: "User not found" });
+    }
+    if (user.profilePicStatus === "approved") {
+      return res
+        .status(400)
+        .json({ status: false, msg: "User is already approved" });
+    }
+    const updatedUser = await CreateUser.findByIdAndUpdate(
+      { _id: userId },
+      { profilePicStatus },
+      { new: true }
+    ).select("-password -verification_token -verification_token_expires");
+    if (!updatedUser) {
+      return res.status(404).json({ status: false, msg: "User not found" });
+    }
+    res
+      .status(200)
+      .json({ status: true, msg: "User updated successfully", updatedUser });
+  } catch (err: any) {
+    console.error("user not updated error : ", err);
+    res.status(500).json({ status: false, msg: "failed to update user" });
+  }
+};
+
 export const deleteUserById = async (req: Request, res: Response) => {
   const userId = req.params.userId;
   console.log("userId", userId, req.user.role);
   // todo delete the profile pic from s3
-  
-  if (req.user.role === "student") {
-    return res.status(401).json({ status: false, msg: "you are not authorized to perform this action" });
-  }
+
+  // if (req.user.role !== "student") {
+  //   return res.status(401).json({ status: false, msg: "you are not authorized to perform this action" });
+  // }
   if (!isValidObjectId(String(userId))) {
     res.status(400).json({ message: "User id is not valid" });
   }
@@ -172,7 +233,12 @@ export const updateUser = async (req: Request, res: Response) => {
   const { body, file } = req;
   const { userName, firstName, lastName, role } = body;
   const userId = req.params.userId;
-  
+  if (!allroles.includes(role.toLowerCase())) {
+    return res.status(400).json({
+      status: false,
+      message: "Invalid user role",
+    });
+  }
   try {
     // Check if the email already exist
     const user = await CreateUser.findById(userId).select("-password");
@@ -213,7 +279,6 @@ export const updateUser = async (req: Request, res: Response) => {
     res.status(500).json({ status: false, msg: "failed to update user" });
   }
 };
-
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     // Check if the email already exist
@@ -448,7 +513,6 @@ export const checkTokenValidity = async (req: Request, res: Response) => {
 export const resetPassword = async (req: Request, res: Response) => {
   await resetPasswordSchema.validate(req.body, { abortEarly: false });
   const { password, token } = req.body;
-  console.log(req.body);
   // Find the reset token in the database
   const resetToken = await ResetToken.findOne({
     token,

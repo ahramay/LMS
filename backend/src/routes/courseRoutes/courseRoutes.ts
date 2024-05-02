@@ -10,6 +10,7 @@ import {
   getCourseFeedbacks,
   coursePayment,
   courseEnrollment,
+  getAllpendingCourses,
 } from "../../controllers/courses/coursesConttroller";
 import { relateCourse } from "../../controllers/courses/relatedCourseController";
 import { storeFileInMemory, upload } from "../../helpers/filehelper";
@@ -27,6 +28,7 @@ router.get("/all", allCourseWithPagination);
 
 // Get all course
 router.get("/", authMiddleware, getCourses);
+router.get("/pendingCourses", authMiddleware, getAllpendingCourses);
 
 // Add new Course
 router.post(

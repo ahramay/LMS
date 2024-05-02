@@ -16,12 +16,13 @@ export interface IUser extends Document {
 }
 export interface ICreateUser extends Document {
   userName: string;
-  firstName:string;
-  lastName:string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   profilePic?: string;
   is_verified?: boolean;
+  profilePicStatus?: "pending" | "approved" | "rejected";
   role: string;
 }
 

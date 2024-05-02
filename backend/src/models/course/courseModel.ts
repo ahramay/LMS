@@ -18,6 +18,7 @@ const courseSchema: Schema = new Schema(
     objectivesTitle: { type: String, required: false },
     courseOverview: { type: String, required: false },
     feedback: { type: [mongoose.Types.ObjectId], ref: "Feedback", index: true },
+    status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
   },
   { timestamps: true, versionKey: false }
 );

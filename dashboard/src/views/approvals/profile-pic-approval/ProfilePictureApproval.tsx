@@ -65,20 +65,28 @@ const ProfilePictureApproval:React.FC<ProfilePictureApprovalProps> = () => {
         () => [
             {
                 header: 'ID',
-                accessorKey: 'id',
+                // accessorKey: (row: UserTableViewtypp, rowIndex: number) => `${rowIndex + 1}`,
             },
             {
-                header: 'Profile Picture',
-                accessorKey: 'profilePicture',
+                header: 'First Name',
+                accessorKey: 'firstName',
+            },
+            {
+                header: 'Last Name',
+                accessorKey: 'lastName',
             },
             {
                 header: 'User Name',
                 accessorKey: 'userName',
             },
+            {
+                header: 'Email',
+                accessorKey: 'email',
+            },
             
             {
-                header: 'Status',
-                accessorKey: 'userStatus',
+                header: 'Profile Pic Status',
+                accessorKey: 'profilePicStatus',
             },
             {
                 header: 'Actions',

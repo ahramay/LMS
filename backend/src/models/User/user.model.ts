@@ -51,6 +51,12 @@ const createUserSchema: Schema<ICreateUser> = new Schema<ICreateUser>(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     profilePic: { type: String, required: false },
+    profilePicStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+      index: true,
+    },
     password: { type: String, required: true, private: true },
     is_verified: { type: Boolean, default: true },
     role: { type: String, required: true },
@@ -58,12 +64,6 @@ const createUserSchema: Schema<ICreateUser> = new Schema<ICreateUser>(
   {
     timestamps: true,
     versionKey: false,
-    // toJSON: {
-    //   transform(doc, ret, options) {
-    //     delete ret.password;
-    //     return ret;
-    //   },
-    // },
   }
 );
 

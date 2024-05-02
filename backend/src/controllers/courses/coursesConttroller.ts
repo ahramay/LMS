@@ -19,12 +19,14 @@ export const createCourse = async (req: Request, res: Response) => {
   const userId = String(_id);
   const userTypes = [
     "Instructor",
+    "super admin",
     "Organization",
     "admin",
     "superAdmin",
     "manager",
     "company",
   ];
+
   try {
     if (!isValidObjectId(String(req.user._id))) {
       res.status(400).json({ message: "User id is required to get courses" });
@@ -201,6 +203,25 @@ export const getCourses = async (req: Request, res: Response) => {
     }
     const userId = String(req.user._id);
     const courses = await Course.find({})
+      .sort({ createdAt: -1 })
+      .populate(userPopulate)
+      .populate(feedbackPopulate);
+    res.status(200).send({ courses });
+  } catch (err: any) {
+    console.error("Failed to get courses", err);
+    res.status(500).json({
+      status: false,
+      message: "Failed to get courses",
+    });
+  }
+};
+export const getAllpendingCourses = async (req: Request, res: Response) => {
+  try {
+    if (!isValidObjectId(String(req.user._id))) {
+      res.status(400).json({ message: "User id is required to get courses" });
+    }
+
+    const courses = await Course.find({ status: "pending" })
       .sort({ createdAt: -1 })
       .populate(userPopulate)
       .populate(feedbackPopulate);

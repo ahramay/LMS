@@ -43,6 +43,9 @@ export const registerSchema = yup.object().shape({
   }),
 });
 
+export const profilePicApprovalSchema = yup.object().shape({
+  profilePicStatus: yup.string().required("profile pic status is required"),
+});
 export const loginSchema = yup.object().shape({
   email: yup.string().required("Email or username is required"),
   password: yup.string().required(),

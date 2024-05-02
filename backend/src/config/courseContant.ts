@@ -15,5 +15,6 @@ const allroles = [
   "editor",
   "student",
 ];
+const isSuperAdmin = ["super admin", ...allroles];
 
-export { userPopulate, feedbackPopulate, allroles };
+export { userPopulate, feedbackPopulate, allroles, isSuperAdmin };

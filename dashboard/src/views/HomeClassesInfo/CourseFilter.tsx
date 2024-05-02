@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect,useRef } from 'react'
 import Input from '@/components/ui/Input'
 import Container from '@/components/shared/Container'
 import Tag from '@/components/ui/Tag'
@@ -23,6 +23,7 @@ import { HiOutlineCog, HiOutlinePencil } from 'react-icons/hi'
 import { MdDone, MdDelete } from 'react-icons/md'
 import Dropdown from '@/components/ui/Dropdown'
 import { BsThreeDotsVertical } from 'react-icons/bs'
+import { useParams } from 'react-router-dom'
 
 import {
     useReactTable,
@@ -35,6 +36,8 @@ import {
     getSortedRowModel,
     flexRender,
 } from '@tanstack/react-table'
+import { CourseState, getAllCourses, useAppDispatch, useAppSelector } from '@/store'
+import { Course as ICourse } from '@/@types'
 
 type Person = {
     id: number
@@ -100,11 +103,33 @@ const CourseFilter: React.FC = () => {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [globalFilter, setGlobalFilter] = useState('')
     const [dialogIsOpen, setIsOpen] = useState(false)
+    const isRendering = useRef(false)
+    const { courseId } = useParams<{ courseId: string }>()
+ 
+
+    const { selectedCourse, allCourseList }: CourseState = useAppSelector((state) => state.courseSlice)
+    let localCourse: ICourse | undefined = selectedCourse
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        if (allCourseList.length === 0 && !isRendering.current) {
+            dispatch(getAllCourses())
+            isRendering.current = true
+        }
+    }, [])
+    if (allCourseList.length > 0 && isRendering.current) {
+        const findCourse = allCourseList.find(
+            (course: ICourse) => course._id === courseId
+        )
+        localCourse = findCourse
+    }
+
+console.log("allCourseList",allCourseList)
 
     const openDialog = () => {
         setIsOpen(true)
     }
-
+ 
     const onDialogClose = (e: MouseEvent) => {
         console.log('onDialogClose', e)
         setIsOpen(false)

@@ -4,6 +4,7 @@ type UserTableViewtype = {
     firstName: string
     lastName: string
     userName:string
+    profilePicStatus:string,
     role:string
     signUpDate: string
     userStatus: boolean
