@@ -1,51 +1,50 @@
-import { useState, useEffect,useRef } from 'react'
-import Input from '@/components/ui/Input'
-import Container from '@/components/shared/Container'
-import Tag from '@/components/ui/Tag'
-import { useMemo } from 'react'
-import Table from '@/components/ui/Table'
-import Pagination from '@/components/ui/Pagination'
-import Select from '@/components/ui/Select'
-import type { InputHTMLAttributes } from 'react'
-import type {
-    ColumnDef,
-    FilterFn,
-    ColumnFiltersState,
-} from '@tanstack/react-table'
+import React, { useState, useEffect, useRef } from 'react'
+import { InputHTMLAttributes } from 'react'
+import { ColumnDef, FilterFn, ColumnFiltersState } from '@tanstack/react-table'
 import { rankItem } from '@tanstack/match-sorter-utils'
-import AdaptableCard from '@/components/shared/AdaptableCard'
-import GetUserRole from '@/components/shared/GetUserRole'
-import type { CellContext } from '@/components/shared/DataTable'
-import Button from '@/components/ui/Button'
-import Dialog from '@/components/ui/Dialog'
-import type { MouseEvent } from 'react'
-import { HiOutlineCog, HiOutlinePencil } from 'react-icons/hi'
-import { MdDone, MdDelete } from 'react-icons/md'
-import Dropdown from '@/components/ui/Dropdown'
-import { BsThreeDotsVertical } from 'react-icons/bs'
-import { useParams } from 'react-router-dom'
-
 import {
     useReactTable,
     getCoreRowModel,
     getFilteredRowModel,
-    getFacetedRowModel,
-    getFacetedUniqueValues,
-    getFacetedMinMaxValues,
     getPaginationRowModel,
     getSortedRowModel,
     flexRender,
 } from '@tanstack/react-table'
-import { CourseState, getAllCourses, useAppDispatch, useAppSelector } from '@/store'
+import {
+    CourseState,
+    getAllCourses,
+    useAppDispatch,
+    useAppSelector,
+} from '@/store'
 import { Course as ICourse } from '@/@types'
+import Container from '@/components/shared/Container'
+import Table from '@/components/ui/Table'
+import Select from '@/components/ui/Select'
+import Button from '@/components/ui/Button'
+import Dialog from '@/components/ui/Dialog'
+import { useParams } from 'react-router-dom'
 
 type Person = {
-    id: number
-    mail: string
-    userName: string
-    signUpDate: string
-    userStatus: any
-    actions: any
+    topic: string
+    postTitle: string
+    objectivesTitle: string
+    price: number
+    status: string
+
+    // title: string;
+    // id: string;
+    // courseOverview: string;
+    // createdAt: string;
+    // createdBy: string;
+    // duration: string;
+    // feedbackCount: number;
+    // image: string;
+    // isCreatedByMe: boolean;
+    // isPublished: boolean;
+    // modality: string;
+
+    // updatedAt: string;
+    // videoUrl: string;
 }
 
 type Option = {
@@ -62,53 +61,17 @@ interface DebouncedInputProps
     onChange: (value: string | number) => void
     debounce?: number
 }
-function DebouncedInput({
-    value: initialValue,
-    onChange,
-    debounce = 500,
-    ...props
-}: DebouncedInputProps) {
-    const [value, setValue] = useState(initialValue)
-
-    useEffect(() => {
-        setValue(initialValue)
-    }, [initialValue])
-
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            onChange(value)
-        }, debounce)
-
-        return () => clearTimeout(timeout)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value])
-
-    return (
-        <div className="flex justify-end">
-            <div className="flex items-center mb-4">
-                <span className="mr-2">Search:</span>
-                <Input
-                    {...props}
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                />
-            </div>
-        </div>
-    )
-}
 
 const CourseFilter: React.FC = () => {
-    const [status, setStatus] = useState<string>('all')
-    const [loading, setLoading] = useState<boolean>(false)
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [globalFilter, setGlobalFilter] = useState('')
     const [dialogIsOpen, setIsOpen] = useState(false)
     const isRendering = useRef(false)
     const { courseId } = useParams<{ courseId: string }>()
- 
 
-    const { selectedCourse, allCourseList }: CourseState = useAppSelector((state) => state.courseSlice)
-    let localCourse: ICourse | undefined = selectedCourse
+    const { allCourseList }: CourseState = useAppSelector(
+        (state) => state.courseSlice
+    )
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -116,32 +79,24 @@ const CourseFilter: React.FC = () => {
             dispatch(getAllCourses())
             isRendering.current = true
         }
-    }, [])
-    if (allCourseList.length > 0 && isRendering.current) {
-        const findCourse = allCourseList.find(
-            (course: ICourse) => course._id === courseId
-        )
-        localCourse = findCourse
-    }
-
-console.log("allCourseList",allCourseList)
+    }, [allCourseList])
 
     const openDialog = () => {
         setIsOpen(true)
     }
- 
-    const onDialogClose = (e: MouseEvent) => {
-        console.log('onDialogClose', e)
+
+    const onDialogClose = () => {
         setIsOpen(false)
     }
 
-    const onDialogOk = (e: MouseEvent) => {
-        console.log('onDialogOk', e)
+    const onDialogOk = () => {
         setIsOpen(false)
     }
 
     const { Tr, Th, Td, THead, TBody, Sorter } = Table
-
+    console.log('====================================')
+    console.log(allCourseList)
+    console.log('====================================')
     const pageSizeOption = [
         { value: 10, label: '10 / page' },
         { value: 20, label: '20 / page' },
@@ -151,127 +106,60 @@ console.log("allCourseList",allCourseList)
     ]
 
     const tableData = (): Person[] => {
-        const arr = []
-        for (let i = 0; i < 3; i++) {
-            arr.push({
-                id: i,
-                userName: `userName${i}`,
-                mail: `mail${i}`,
-                signUpDate: `Sign Up Date ${i}`,
-                userStatus: i % 2 === 0 ? true : false,
-                actions: i,
-            })
-        }
-        return arr
+        return allCourseList.map((course) => ({
+            topic: course.topic,
+            postTitle: course.postTitle,
+            objectivesTitle: course.objectivesTitle,
+            price: course.price,
+            status: course.status,
+            // title: course.title,
+            // id: course._id,
+            // courseOverview: course.courseOverview,
+            // createdAt: course.createdAt,
+            // createdBy: course.createdBy.email,
+            // duration: course.duration,
+            // feedbackCount: course.feedback.length,
+            // image: course.image,
+            // isCreatedByMe: course.isCreatedByMe,
+            // isPublished: course.isPublished,
+            // modality: course.modality,
+
+            // updatedAt: course.updatedAt,
+            // videoUrl: course.videoUrl,
+        }))
     }
+
     const totalData = tableData().length
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-        // Rank the item
         const itemRank = rankItem(row.getValue(columnId), value)
-        // Store the itemRank info
         addMeta({
             itemRank,
         })
-        // Return if the item should be filtered in/out
         return itemRank.passed
     }
 
-    const handleAction = (cellProps: CellContext<Person, unknown>) => {
-        console.log('Action clicked', cellProps)
+    const handleAction = () => {
+        console.log('Action clicked')
     }
 
-    const columns = useMemo<ColumnDef<Person>[]>(
+    const columns = React.useMemo<ColumnDef<Person>[]>(
         () => [
-            {
-                header: 'ID',
-                accessorKey: 'id',
-            },
-            {
-                header: 'Completion Date',
-                accessorKey: 'CompletionDate',
-            },
-            {
-                header: 'Expiry Date',
-                accessorKey: 'ExpiryDate',
-            },
-            {
-                header: 'Course',
-                accessorKey: 'course',
-            },
-            {
-                header: 'User',
-                accessorKey: 'user',
-            },
-            {
-                header: 'Company',
-                accessorKey: 'company',
-            },
-            {
-                header: 'Actions',
-                id: 'action',
-                cell: (props) => {
-                    const Toggle = (
-                        <span className="cursor-pointer rotate-180">
-                            <BsThreeDotsVertical size={20} />
-                        </span>
-                    )
-                    return (
-                        <>
-                            <Dropdown
-                                placement="bottom-center"
-                                renderTitle={Toggle}
-                            >
-                                <Dropdown.Item eventKey="a">
-                                    <Button
-                                        size="xs"
-                                        onClick={() => handleAction(props)}
-                                        className="capitalize mr-2 mb-2 w-full p-0"
-                                        variant="solid"
-                                        color="blue-600"
-                                        icon={<HiOutlinePencil size={15} />}
-                                    >
-                                        <span>Edit</span>
-                                    </Button>
-                                </Dropdown.Item>
-                                <Dropdown.Item eventKey="b">
-                                    <Button
-                                        size="xs"
-                                        onClick={() => {
-                                            handleAction(props)
-                                            openDialog()
-                                        }}
-                                        className="mr-2 mb-2 capitalize w-full"
-                                        icon={<MdDelete size={15} />}
-                                        variant="solid"
-                                        color="red-600"
-                                    >
-                                        <span>Delete</span>
-                                    </Button>
-                                </Dropdown.Item>
-                                <Dropdown.Item eventKey="c">
-                                    <Button
-                                        size="xs"
-                                        onClick={() => handleAction(props)}
-                                        className="capitalize mr-2 mb-2 w-full"
-                                        variant="solid"
-                                        color="green-600"
-                                        icon={<MdDone />}
-                                    >
-                                        <span>approval</span>
-                                    </Button>
-                                </Dropdown.Item>
-                            </Dropdown>
-                        </>
-                    )
-                },
-            },
+            { header: 'Topic', accessorKey: 'topic' },
+            { header: 'Post Title', accessorKey: 'postTitle' },
+            { header: 'Objectives Title', accessorKey: 'objectivesTitle' },
+            { header: 'Price', accessorKey: 'price' },
+            { header: 'Status', accessorKey: 'status' },
         ],
         []
     )
 
-    const [data] = useState(() => tableData())
+    const [data, setData] = useState(() => tableData())
+
+    useEffect(() => {
+        setData(tableData())
+    }, [allCourseList])
+
     const table = useReactTable({
         data,
         columns,
@@ -291,11 +179,6 @@ console.log("allCourseList",allCourseList)
         getFilteredRowModel: getFilteredRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        getFacetedRowModel: getFacetedRowModel(),
-        getFacetedUniqueValues: getFacetedUniqueValues(),
-        getFacetedMinMaxValues: getFacetedMinMaxValues(),
-        debugHeaders: true,
-        debugColumns: false,
     })
 
     const onPaginationChange = (page: number) => {
@@ -308,167 +191,139 @@ console.log("allCourseList",allCourseList)
 
     return (
         <Container>
-            <AdaptableCard>
-                <>
-                    <Dialog
-                        isOpen={dialogIsOpen}
-                        bodyOpenClassName="overflow-hidden"
-                        onClose={onDialogClose}
-                        onRequestClose={onDialogClose}
+            <Dialog
+                isOpen={dialogIsOpen}
+                bodyOpenClassName="overflow-hidden"
+                onClose={onDialogClose}
+                onRequestClose={onDialogClose}
+            >
+                <h5 className="mb-4">
+                    Would you like to permanently delete this user ?
+                </h5>
+                <p>Once deleted, this user will no longer be accessible.</p>
+                <div className="text-right mt-6">
+                    <Button
+                        className="ltr:mr-2 rtl:ml-2 capitalize"
+                        variant="twoTone"
+                        onClick={onDialogClose}
                     >
-                        <h5 className="mb-4">
-                            Would you like to permanently delete this user ?
-                        </h5>
-                        <p>
-                            Once deleted, this user will no longer be
-                            accessible.
-                        </p>
-                        <div className="text-right mt-6">
-                            <Button
-                                className="ltr:mr-2 rtl:ml-2 capitalize"
-                                variant="twoTone"
-                                onClick={onDialogClose}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                className="capitalize"
-                                variant="solid"
-                                onClick={onDialogOk}
-                                color="red-600"
-                            >
-                                Permanently delete
-                            </Button>
-                        </div>
-                    </Dialog>
-                </>
-                <>
-                     <div className="flex items-center justify-between  bg-[#F5F5F5] "> {/* my-4 */}
-                        <div style={{ minWidth: 130 }} className='pb-[15px]'>
-                            <Select<Option>
-                                size="sm"
-                                isSearchable={false}
-                                value={pageSizeOption.filter(
-                                    (option) =>
-                                        option.value ===
-                                        table.getState().pagination.pageSize
-                                )}
-                                options={pageSizeOption}
-                                onChange={(option) =>
-                                    onSelectChange(option?.value)
-                                }
-                            />
-                        </div>
-
-                    </div>
-                    <Table>
-                        <THead>
-                            {table.getHeaderGroups().map((headerGroup) => (
-                                <Tr key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => {
-                                        return (
-                                            <Th
-                                                key={header.id}
-                                                colSpan={header.colSpan}
-                                                style={{
-                                                    position: 'relative',
-                                                    width: header.getSize(),
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                {header.isPlaceholder ? null : (
-                                                    <div
-                                                        {...{
-                                                            className:
-                                                                header.column.getCanSort()
-                                                                    ? `table-resizer flex items-center justify-center cursor-all-scroll cursor-pointer  w-full   ${
-                                                                          header.column.getIsResizing()
-                                                                              ? 'isResizing'
-                                                                              : ''
-                                                                      }`
-                                                                    : '',
-
-                                                            onClick:
-                                                                header.column.getToggleSortingHandler(),
-                                                        }}
-                                                        onMouseDown={header.getResizeHandler()}
-                                                        onTouchStart={header.getResizeHandler()}
-                                                    >
-                                                        {flexRender(
-                                                            header.column
-                                                                .columnDef
-                                                                .header,
-                                                            header.getContext()
-                                                        )}
-                                                        {
-                                                            <Sorter
-                                                                sort={header.column.getIsSorted()}
-                                                            />
-                                                        }
-                                                    </div>
-                                                )}
-                                            </Th>
-                                        )
-                                    })}
-                                </Tr>
+                        Cancel
+                    </Button>
+                    <Button
+                        className="capitalize"
+                        variant="solid"
+                        onClick={onDialogOk}
+                        color="red-600"
+                    >
+                        Permanently delete
+                    </Button>
+                </div>
+            </Dialog>
+            <div className="flex items-center justify-between  bg-[#F5F5F5]">
+                <div style={{ minWidth: 130 }} className="pb-[15px]">
+                    <Select<Option>
+                        size="sm"
+                        isSearchable={false}
+                        value={pageSizeOption.filter(
+                            (option) =>
+                                option.value ===
+                                table.getState().pagination.pageSize
+                        )}
+                        options={pageSizeOption}
+                        onChange={(option) => onSelectChange(option?.value)}
+                    />
+                </div>
+            </div>
+            <Table>
+                <THead>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                        <Tr key={headerGroup.id}>
+                            {headerGroup.headers.map((header) => (
+                                <Th
+                                    key={header.id}
+                                    colSpan={header.colSpan}
+                                    style={{
+                                        position: 'relative',
+                                        width: header.getSize(),
+                                        textAlign: 'center',
+                                        // backgroundColor:'red'
+                                    }}
+                                >
+                                    {header.isPlaceholder ? null : (
+                                        <div
+                                            {...{
+                                                className: `${header.column.getCanSort()
+                                                    ? `table-resizer flex items-center justify-center cursor-all-scroll cursor-pointer  w-full   ${header.column.getIsResizing()
+                                                        ? 'isResizing'
+                                                        : ''
+                                                    }`
+                                                    : ''
+                                                    }`,
+                                                onClick:
+                                                    header.column.getToggleSortingHandler(),
+                                            }}
+                                            onMouseDown={header.getResizeHandler()}
+                                            onTouchStart={header.getResizeHandler()}
+                                        >
+                                            {flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                            <Sorter
+                                                sort={header.column.getIsSorted()}
+                                            />
+                                        </div>
+                                    )}
+                                </Th>
                             ))}
-                        </THead>
-                        <TBody>
-                            {table.getRowModel().rows.map((row, index) => {
-                                const isOdd = index % 2 === 0
-                                const rowClassName = isOdd
-                                    ? 'text-center bg-[#f5f5f5]'
-                                    : 'text-center'
-                                return (
-                                    <Tr key={row.id} className={rowClassName}>
-                                        {row.getVisibleCells().map((cell) => {
-                                            return (
-                                                <Td
-                                                    key={cell.id}
-                                                    style={{
-                                                        width: cell.column.getSize(),
-                                                    }}
-                                                >
-                                                    {cell?.column?.columnDef
-                                                        .accessorKey ===
-                                                    'userStatus' ? (
-                                                        row.original
-                                                            .userStatus ? (
-                                                            <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
-                                                                Pending
-                                                            </Tag>
-                                                        ) : (
-                                                            <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
-                                                                approved
-                                                            </Tag>
-                                                        )
-                                                    ) : (
-                                                        flexRender(
-                                                            cell.column
-                                                                .columnDef.cell,
-                                                            cell.getContext()
-                                                        )
-                                                    )}
-                                                </Td>
-                                            )
-                                        })}
-                                    </Tr>
-                                )
-                            })}
-                        </TBody>
-                    </Table>
-                    <div className="flex items-center justify-between mt-4  pb-[10px]">
-                        <Pagination
-                            pageSize={table.getState().pagination.pageSize}
-                            currentPage={
-                                table.getState().pagination.pageIndex + 1
-                            }
-                            total={totalData}
-                            onChange={onPaginationChange}
-                        />
-                    </div>
-                </>
-            </AdaptableCard>
+                        </Tr>
+                    ))}
+                </THead>
+                <TBody>
+                    {table.getRowModel().rows.map((row, index) => {
+                        const isOdd = index % 2 === 0
+                        const rowClassName = isOdd
+                            ? 'text-center bg-[#f5f5f5]'
+                            : 'text-center'
+                        return (
+                            <Tr key={row.id} className={rowClassName}>
+                                {row.getVisibleCells().map((cell) => {
+                                    return (
+                                        <Td
+                                            key={cell.id}
+                                            style={{
+                                                width: cell.column.getSize(),
+                                                textAlign: 'center', // Center the content
+                                            }}
+                                        >
+                                            {cell?.column?.columnDef
+                                                .accessorKey === 'userStatus' ? (
+                                                row.original
+                                                    .userStatus ? (
+                                                    <Tag className=" capitalize text-red-600 bg-red-100 dark:text-red-100 dark:bg-red-500/20 border-0">
+                                                        Pending
+                                                    </Tag>
+                                                ) : (
+                                                    <Tag className="bg-emerald-100 capitalize text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 border-0 ">
+                                                        approved
+                                                    </Tag>
+                                                )
+                                            ) : (
+                                                flexRender(
+                                                    cell.column
+                                                        .columnDef.cell,
+                                                    cell.getContext()
+                                                )
+                                            )}
+                                        </Td>
+                                    )
+                                })}
+                            </Tr>
+                        )
+                    })}
+                </TBody>
+
+            </Table>
         </Container>
     )
 }
