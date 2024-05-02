@@ -45,9 +45,9 @@ const CourseCard = (props: IProps) => {
                         />
                     </div>
 
-                    <div className="px-[10px] py-[7px] h-[166px]">
+                    <div className="px-[10px] py-[7px] h-[178px]">
                         <div className="">
-                            <h6 className="text-[18px] font-[700] leading-[21px] text-black mb-2 ">
+                            <h6 className="text-[18px] md:text-[14px] lg:text-[18px] font-[700] leading-[21px] text-black mb-2 ">
                                 {data.title}
                             </h6>
                         </div>
