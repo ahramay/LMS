@@ -30,25 +30,10 @@ type Person = {
     objectivesTitle: string
     price: number
     status: string
-
-    // title: string;
-    // id: string;
-    // courseOverview: string;
-    // createdAt: string;
-    // createdBy: string;
-    // duration: string;
-    // feedbackCount: number;
-    // image: string;
-    // isCreatedByMe: boolean;
-    // isPublished: boolean;
-    // modality: string;
-
-    // updatedAt: string;
-    // videoUrl: string;
 }
 
 type Option = {
-    value: number
+    value: string
     label: string
 }
 
@@ -66,6 +51,9 @@ const CourseFilter: React.FC = () => {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [globalFilter, setGlobalFilter] = useState('')
     const [dialogIsOpen, setIsOpen] = useState(false)
+    const [minPrice, setMinPrice] = useState<number | undefined>(undefined)
+    const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined)
+    const [status, setStatus] = useState<string | undefined>(undefined)
     const isRendering = useRef(false)
     const { courseId } = useParams<{ courseId: string }>()
 
@@ -94,42 +82,6 @@ const CourseFilter: React.FC = () => {
     }
 
     const { Tr, Th, Td, THead, TBody, Sorter } = Table
-    console.log('====================================')
-    console.log(allCourseList)
-    console.log('====================================')
-    const pageSizeOption = [
-        { value: 10, label: '10 / page' },
-        { value: 20, label: '20 / page' },
-        { value: 30, label: '30 / page' },
-        { value: 40, label: '40 / page' },
-        { value: 50, label: '50 / page' },
-    ]
-
-    const tableData = (): Person[] => {
-        return allCourseList.map((course) => ({
-            topic: course.topic,
-            postTitle: course.postTitle,
-            objectivesTitle: course.objectivesTitle,
-            price: course.price,
-            status: course.status,
-            // title: course.title,
-            // id: course._id,
-            // courseOverview: course.courseOverview,
-            // createdAt: course.createdAt,
-            // createdBy: course.createdBy.email,
-            // duration: course.duration,
-            // feedbackCount: course.feedback.length,
-            // image: course.image,
-            // isCreatedByMe: course.isCreatedByMe,
-            // isPublished: course.isPublished,
-            // modality: course.modality,
-
-            // updatedAt: course.updatedAt,
-            // videoUrl: course.videoUrl,
-        }))
-    }
-
-    const totalData = tableData().length
 
     const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
         const itemRank = rankItem(row.getValue(columnId), value)
@@ -137,10 +89,6 @@ const CourseFilter: React.FC = () => {
             itemRank,
         })
         return itemRank.passed
-    }
-
-    const handleAction = () => {
-        console.log('Action clicked')
     }
 
     const columns = React.useMemo<ColumnDef<Person>[]>(
@@ -154,11 +102,36 @@ const CourseFilter: React.FC = () => {
         []
     )
 
-    const [data, setData] = useState(() => tableData())
+    const tableData = (): Person[] => {
+        return allCourseList.map((course) => ({
+            topic: course.topic,
+            postTitle: course.postTitle,
+            objectivesTitle: course.objectivesTitle,
+            price: course.price,
+            status: course.status,
+        }))
+    }
+
+    const filteredData = tableData().filter((person) => {
+        if (minPrice !== undefined && person.price < minPrice) {
+            return false
+        }
+        if (maxPrice !== undefined && person.price > maxPrice) {
+            return false
+        }
+        if (status !== undefined && person.status !== status) {
+            return false
+        }
+        return true
+    })
+
+    const totalData = filteredData.length
+
+    const [data, setData] = useState(() => filteredData)
 
     useEffect(() => {
-        setData(tableData())
-    }, [allCourseList])
+        setData(filteredData)
+    }, [allCourseList, minPrice, maxPrice, status])
 
     const table = useReactTable({
         data,
@@ -219,22 +192,53 @@ const CourseFilter: React.FC = () => {
                     </Button>
                 </div>
             </Dialog>
-            <div className="flex items-center justify-between  bg-[#F5F5F5]">
-                <div style={{ minWidth: 130 }} className="pb-[15px]">
-                    <Select<Option>
-                        size="sm"
-                        isSearchable={false}
-                        value={pageSizeOption.filter(
-                            (option) =>
-                                option.value ===
-                                table.getState().pagination.pageSize
-                        )}
-                        options={pageSizeOption}
-                        onChange={(option) => onSelectChange(option?.value)}
-                    />
+
+            <div className="flex gap-[15px] mt-[10px] mb-10 items-end">
+                {/* <div>
+                    <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">
+                        Status:
+                    </p>
+                    <select
+                        className="py-[8px] pl-[8px] rounded-[7px] border-[1.6px]"
+                        value={status || ''}
+                        onChange={(e) => setStatus(e.target.value)}
+                    >
+                        <option value="">Select Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                    </select>
+                </div> */}
+                <div>
+                    <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">
+                        Price Range:
+                    </p>
+                    <div className="flex">
+                        <input
+                            type="number"
+                            placeholder="Min"
+                            value={minPrice || ''}
+                            onChange={(e) => setMinPrice(Number(e.target.value))}
+                            className="py-[8px] pl-[8px] rounded-[7px] border-[1.6px] mr-2"
+                        />
+                        <input
+                            type="number"
+                            placeholder="Max"
+                            value={maxPrice || ''}
+                            onChange={(e) => setMaxPrice(Number(e.target.value))}
+                            className="py-[8px] pl-[8px] rounded-[7px] border-[1.6px]"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <button className="border-[1px] hover:border-[2px] py-[7px] px-[18px] rounded-[5px] hover:border-[#4f46e5] font-[600] bg-[#fff]">
+                        Search
+                    </button>
                 </div>
             </div>
+
             <Table>
+                {/* Table Headers */}
                 <THead>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <Tr key={headerGroup.id}>
@@ -246,19 +250,20 @@ const CourseFilter: React.FC = () => {
                                         position: 'relative',
                                         width: header.getSize(),
                                         textAlign: 'center',
-                                        // backgroundColor:'red'
                                     }}
                                 >
                                     {header.isPlaceholder ? null : (
                                         <div
                                             {...{
-                                                className: `${header.column.getCanSort()
-                                                    ? `table-resizer flex items-center justify-center cursor-all-scroll cursor-pointer  w-full   ${header.column.getIsResizing()
-                                                        ? 'isResizing'
+                                                className: `${
+                                                    header.column.getCanSort()
+                                                        ? `table-resizer flex items-center justify-center cursor-all-scroll cursor-pointer  w-full   ${
+                                                              header.column.getIsResizing()
+                                                                  ? 'isResizing'
+                                                                  : ''
+                                                          }`
                                                         : ''
-                                                    }`
-                                                    : ''
-                                                    }`,
+                                                }`,
                                                 onClick:
                                                     header.column.getToggleSortingHandler(),
                                             }}
@@ -279,6 +284,8 @@ const CourseFilter: React.FC = () => {
                         </Tr>
                     ))}
                 </THead>
+
+                {/* Table Body */}
                 <TBody>
                     {table.getRowModel().rows.map((row, index) => {
                         const isOdd = index % 2 === 0
@@ -293,7 +300,7 @@ const CourseFilter: React.FC = () => {
                                             key={cell.id}
                                             style={{
                                                 width: cell.column.getSize(),
-                                                textAlign: 'center', // Center the content
+                                                textAlign: 'center',
                                             }}
                                         >
                                             {cell?.column?.columnDef
@@ -322,7 +329,6 @@ const CourseFilter: React.FC = () => {
                         )
                     })}
                 </TBody>
-
             </Table>
         </Container>
     )

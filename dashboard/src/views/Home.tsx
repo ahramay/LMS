@@ -63,23 +63,7 @@ const dashboardCards = [
                 
              
 
-                <div className="flex gap-[15px] mt-[30px] items-end">
-
-
-                    <div>
-                        <p className="text-[15px] text-[#444444] font-[700] mb-[4px]">Status:</p>
-                        <select className="py-[8px] pl-[8px] rounded-[7px] border-[1.6px]">
-                            <option value="Course">Select Course</option>
-                            <option value="Html">Html Course</option>
-                            <option value="Css">Css Course</option>
-                            <option value="Javascript">Javascript Course</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <button className="border-[1px] hover:border-[2px] py-[7px] px-[18px] rounded-[5px] hover:border-[#4f46e5] font-[600] bg-[#fff]">Search</button>
-                    </div>
-                </div>
+          
                 <div className="mt-[30px]">
                 <CourseFilter/>
                 </div>
