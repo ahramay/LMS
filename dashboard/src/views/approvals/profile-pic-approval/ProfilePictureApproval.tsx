@@ -14,6 +14,9 @@ import UserTableViewtypp from "@/@types/UserTableViewtype"
 import { HiOutlineXMark } from "react-icons/hi2";
 import Dialog from '@/components/ui/Dialog'
 import Input from '@/components/ui/Input'
+import { Tooltip} from "@/components/ui"
+import { HiOutlinePencil } from 'react-icons/hi'
+import { useNavigate } from 'react-router-dom'
 interface ProfilePictureApprovalProps{
 
 }
@@ -24,6 +27,7 @@ const ProfilePictureApproval:React.FC<ProfilePictureApprovalProps> = () => {
     const [dialogIsOpenReject, setIsOpenReject] = useState<boolean>(false)
 
     const rejectFeebackAddInputRef = useRef<HTMLInputElement>(null)
+    const navigate = useNavigate();
 
     const openDialog = () => {
         setIsOpen(true)
@@ -49,8 +53,11 @@ const ProfilePictureApproval:React.FC<ProfilePictureApprovalProps> = () => {
     
    
     const handleAction = (cellProps: CellContext<UserTableViewtypp, unknown>) => {
-        console.log('Action clicked', cellProps)
-
+        const userData = cellProps?.row?.original || null
+        const userId = cellProps?.row?.original?._id || null
+        if(userData && userId){
+            navigate(`/user/updateStatus/?userId=${userId}`, {state: userData})
+        }
     }
 
     const onRejectApprovalDialogClose = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>)=>{
@@ -63,10 +70,10 @@ const ProfilePictureApproval:React.FC<ProfilePictureApprovalProps> = () => {
     
     const columns = useMemo<ColumnDef<UserTableViewtypp>[]>(
         () => [
-            {
-                header: 'ID',
-                // accessorKey: (row: UserTableViewtypp, rowIndex: number) => `${rowIndex + 1}`,
-            },
+            // {
+            //     header: 'ID',
+            //     // accessorKey: (row: UserTableViewtypp, rowIndex: number) => `${rowIndex + 1}`,
+            // },
             {
                 header: 'First Name',
                 accessorKey: 'firstName',
@@ -91,62 +98,23 @@ const ProfilePictureApproval:React.FC<ProfilePictureApprovalProps> = () => {
             {
                 header: 'Actions',
                 id: 'action',
-                cell: (props) => {
-                    const Toggle = (
+                cell: (props) => (
+                    // const Toggle = (
                         <span className='cursor-pointer rotate-180'>
-                            <BsThreeDotsVertical size={20}/>
+                            {/* <BsThreeDotsVertical size={20}/> */}
+                            <Tooltip title="Edit">
+                            <span
+                                className={`cursor-pointer p-2 hover:text-blue-400`}
+                            >
+                                <HiOutlinePencil onClick={() => {
+                                    handleAction(props)
+                                    // openDialog()
+                                }} />
+                            </span>
+                        </Tooltip>
                         </span>
                     )
-                    return (
-                        <>
-                            <Dropdown placement="bottom-end" renderTitle={Toggle}>
-                                <Dropdown.Item eventKey="a" >
-                                    <Button
-                                        size="xs"
-                                        onClick={() => {
-                                            handleAction(props)
-                                            openRejectDialog()
-                                        }}
-                                        className="capitalize mr-2 mb-2 w-full p-0"
-                                        variant="solid"
-                                        color="yellow-600"
-                                        icon={<HiOutlineXMark size={15} />}
-
-                                    >
-                                        <span>Reject</span>
-                                    </Button>
-                                </Dropdown.Item>
-                                <Dropdown.Item eventKey="b">
-                                    <Button
-                                        size="xs"
-                                        onClick={() => {
-                                            handleAction(props)
-                                            openDialog()
-                                        }}
-                                        className="mr-2 mb-2 capitalize w-full"
-                                        icon={<MdDelete size={15} />}
-                                        variant="solid"
-                                        color="red-600"
-                                    >
-                                        <span>Delete</span>
-                                    </Button>
-                                </Dropdown.Item>
-                                <Dropdown.Item eventKey="c">
-                                    <Button
-                                        size="xs"
-                                        onClick={() => handleAction(props)}
-                                        className="capitalize mr-2 mb-2 w-full"
-                                        variant="solid"
-                                        color="green-600"
-                                        icon={<MdDone size={15} />}
-                                    >
-                                        <span>approval</span>
-                                    </Button>
-                                </Dropdown.Item>
-                            </Dropdown>
-                        </>
-                    )
-                },
+                                  
             },
         ],
         []

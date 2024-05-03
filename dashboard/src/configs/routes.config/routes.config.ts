@@ -204,4 +204,10 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/profile/UserProfile')),
         authority: [],
     },
+    {
+        key :'status.userId',
+        path :'/user/updateStatus/',
+        component: lazy(() => import('@/views/approvals/ProfileStatusUpdated')),
+        authority: [],
+    },
 ]

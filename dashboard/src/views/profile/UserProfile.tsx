@@ -1,5 +1,4 @@
 import React from 'react'
-import UpdateProfileForm from './components/UpdateProfileForm'
 import { useLocation } from 'react-router-dom'
 
 const UserProfile = () => {

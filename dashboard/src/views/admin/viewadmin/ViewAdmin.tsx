@@ -55,7 +55,7 @@ const ViewAdmin = () => {
             },
             {
                 header: 'Last Name',
-                accessorKey: 'lastName',
+                 'lastName',
             },
             {
                 header: 'Sign-Up Date',
